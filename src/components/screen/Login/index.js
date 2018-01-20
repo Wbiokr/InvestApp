@@ -7,20 +7,35 @@ import {
   Text,
   Button,
   TextInput,
-  CheckBox,
-  StyleSheet
+  StyleSheet,
+  TouchableOpacity,
+  LayoutAnimation,
+  ToastAndroid,
+  AsyncStorage
 } from 'react-native';
+
+import CheckBox from 'react-native-checkbox';
 
 import color from '../../../deploy/Color';
 
 
 export default class Login extends React.Component{
+  constructor(props){
+    super(props)
+    this.state={
+      color:'#f00',
+      fz:18,
+      height:12,
+      width:12,
+    }
+    this.login=this.login.bind(this)
+  }
   render(){
    return(
      <View style={styles.container}>
         <View style={styles.box}>
           <View>
-            <Text style={styles.title}>PERSON INFOR</Text>
+            <Text style={[styles.title,{fontSize:this.state.fz}]}>PERSON INFOR</Text>
             <View style={styles.name}>
               <Text style={[{width:50},styles.height]}>name:</Text>
               <TextInput style={
@@ -29,6 +44,10 @@ export default class Login extends React.Component{
                 placeholder='username'
                 underlineColorAndroid='transparent' 
                 maxLength={10} 
+                ref='name'
+                onChangeText={(name)=>{
+                  this.setState({name})
+                }}
               />
             </View>
             <View style={styles.name}>
@@ -39,23 +58,96 @@ export default class Login extends React.Component{
                 placeholder='password'
                 underlineColorAndroid='transparent'  
                 maxLength={12}
+                ref='pass'
+                onChangeText={(pass)=>{
+                  this.setState(pass)
+                }}
               />
             </View>
           </View>
-          <View>
-              <CheckBox style={{backgroundColor:'#f00'}} />
+          <View style={{paddingVertical:10}}>
+              <CheckBox style={{backgroundColor:'#f00'}} 
+                  label='Remeber Account'
+                  labelBefore={false}
+                  labelStyle={{
+                    color:color.orange
+                  }}
+                  containerStyle={{
+                  }}
+                  checkboxStyle={{
+                    // borderColor:color.yellow,
+                    height:this.state.height,
+                    width:this.state.width,
+                  }}
+                  // checked={true}
+                  underlayColor={color.gray3}
+                  onChange={(v)=>{
+                    this.togglePassStatus(v)
+                  }}
+              />
           </View>
-          <View style={styles.submit}>
+          <TouchableOpacity activeOpacity={0.9} style={{marginTop:15}}>
                 
-            <Button 
+            <Button
+              disabled={false}
+              ref='sbt' 
               title='submit'
-              onPress={()=>{}}
-              // style={styles.submit}
+              // color={this.state.color}
+              onPress={()=>{
+                this.login()
+              }}
             />
-          </View>
+          </TouchableOpacity>
         </View>
      </View>
    )   
+  }
+  login(v){
+    LayoutAnimation.configureNext({
+      duration:400,
+      create:{
+        type:LayoutAnimation.Types.spring,
+        property:LayoutAnimation.Properties.scaleXY,
+      },
+      update:{
+        type:LayoutAnimation.Types.spring
+      } 
+    });
+
+    // this.setState({
+    //   width:30,
+    //   height:30,
+    // })
+
+    if(v){
+
+    }
+  }
+  togglePassStatus(v){
+    const message=!v?'您已忘记账户':'您已记住账户';
+    ToastAndroid.show(message,200);
+    // localStorage.setItem('invest',JSON.stringify({
+    //   login:true,
+    //   infor:{
+    //     name:this.refs.name
+    //   }
+    // }))
+    const invest=v?JSON.stringify({
+      isLogin:true,
+      infor:{
+        name:this.state.name,
+        pass:this.state.pass
+      }
+    }):JSON.stringify({
+      isLogin:false,
+      infor:{
+        name:'',
+        pass:'',
+      }
+    })
+    AsyncStorage.setItem('invest',invest);
+    // alert(JSON.stringify(AsyncStorage.getItem()))
+    AsyncStorage.getItem('invest').then(v=>{alert(v)})
   }
 }
 
@@ -64,6 +156,9 @@ const styles=StyleSheet.create({
     justifyContent:'center',
     alignItems:'center',
   },
+  // label:{
+
+  // },
   height:{
     height:30,
     lineHeight:22,
@@ -71,13 +166,10 @@ const styles=StyleSheet.create({
   },
   input:{
     // borderWidth:1,
-    // borderColor:color.gray1,
+    borderColor:color.gray1,
     color:color.blueGreen
   },
-  submit:{
-    marginTop:15,
-    // color:color.orange
-  },
+  
   container:{
     flex:1,
     justifyContent:'center',
