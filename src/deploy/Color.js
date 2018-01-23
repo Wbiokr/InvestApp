@@ -28,4 +28,6 @@ export default {
   gray5:'#d2d2d2',
 
   gray6:'#c2c2c2',
+
+  yd:'#ca6',
 }

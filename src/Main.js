@@ -6,16 +6,43 @@ import {
   StyleSheet
 } from 'react-native';
 
-import Login from './components/screen/Login/';
+import {
+  StackNavigator
+} from 'react-navigation';
 
+import Login from './screen/Login';
+import Index from './screen/Index';
 
-export default class App extends React.Component{
-  render(){
-    return <View style={styles.container}>
-              <Login />
-          </View>
+import './deploy/';
+
+export default StackNavigator(
+  {
+    Login:{
+      screen:Login,
+      navigationOptions:{
+        header:null
+      }
+    },
+    Index:{
+      screen:Index,
+      navigationOptions:{
+        // headerTitle:'hello',
+            header:null,
+        // headerTintColor:'#666',
+        // headerTitleStyle:{
+        //   alignSelf:'center'
+        // }        
+      }
+    }
+  },
+  {
+    initialRouteName:'Index',
+    mode:'card',
+    
   }
-}
+)
+
+
 
 const styles=StyleSheet.create({
   container:{

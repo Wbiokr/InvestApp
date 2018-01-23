@@ -16,7 +16,7 @@ import {
 
 import CheckBox from 'react-native-checkbox';
 
-import color from '../../../deploy/Color';
+import color from '../deploy/Color';
 
 
 export default class Login extends React.Component{
@@ -27,8 +27,13 @@ export default class Login extends React.Component{
       fz:18,
       height:12,
       width:12,
+      name:'',
+      pass:'',
+      status:true,
     }
-    this.login=this.login.bind(this)
+    this.login=this.login.bind(this);
+    this.togglePassStatus=this.togglePassStatus.bind(this);
+    this.fillAcount=this.fillAcount.bind(this);
   }
   render(){
    return(
@@ -41,13 +46,16 @@ export default class Login extends React.Component{
               <TextInput style={
                   [{flex:1},styles.center,styles.height,styles.input]
                 } 
+                keyboardType='default'
                 placeholder='username'
                 underlineColorAndroid='transparent' 
                 maxLength={10} 
                 ref='name'
+                defaultValue={this.state.name}
                 onChangeText={(name)=>{
                   this.setState({name})
                 }}
+               
               />
             </View>
             <View style={styles.name}>
@@ -55,12 +63,15 @@ export default class Login extends React.Component{
               <TextInput style={
                   [{flex:1},styles.center,styles.height,styles.input]
                 } 
+                keyboardType='numeric'
+                secureTextEntry={true}
                 placeholder='password'
                 underlineColorAndroid='transparent'  
                 maxLength={12}
                 ref='pass'
+                defaultValue={this.state.pass}
                 onChangeText={(pass)=>{
-                  this.setState(pass)
+                  this.setState({pass})
                 }}
               />
             </View>
@@ -79,7 +90,7 @@ export default class Login extends React.Component{
                     height:this.state.height,
                     width:this.state.width,
                   }}
-                  // checked={true}
+                  checked={this.state.status}
                   underlayColor={color.gray3}
                   onChange={(v)=>{
                     this.togglePassStatus(v)
@@ -102,41 +113,37 @@ export default class Login extends React.Component{
      </View>
    )   
   }
-  login(v){
-    LayoutAnimation.configureNext({
-      duration:400,
-      create:{
-        type:LayoutAnimation.Types.spring,
-        property:LayoutAnimation.Properties.scaleXY,
-      },
-      update:{
-        type:LayoutAnimation.Types.spring
-      } 
-    });
-
-    // this.setState({
-    //   width:30,
-    //   height:30,
-    // })
-
-    if(v){
-
-    }
+  componentWillMount(){
+    this.fillAcount()
   }
-  togglePassStatus(v){
-    const message=!v?'您已忘记账户':'您已记住账户';
-    ToastAndroid.show(message,200);
-    // localStorage.setItem('invest',JSON.stringify({
-    //   login:true,
-    //   infor:{
-    //     name:this.refs.name
-    //   }
-    // }))
-    const invest=v?JSON.stringify({
+  fillAcount(){
+    AsyncStorage.getItem('invest')
+                .then(v=>{
+                  if(!!v&&v.length>10){
+                    const obj=JSON.parse(v);
+                    this.setState({
+                      name:obj.infor.name,
+                      pass:obj.infor.pass,
+                    })
+                  }
+                })
+  }
+  login(){
+    // LayoutAnimation.configureNext({
+    //   duration:400,
+    //   create:{
+    //     type:LayoutAnimation.Types.spring,
+    //     property:LayoutAnimation.Properties.scaleXY,
+    //   },
+    //   update:{
+    //     type:LayoutAnimation.Types.spring
+    //   } 
+    // });
+    const invest=this.state.status?JSON.stringify({
       isLogin:true,
       infor:{
         name:this.state.name,
-        pass:this.state.pass
+        pass:this.state.pass,
       }
     }):JSON.stringify({
       isLogin:false,
@@ -146,8 +153,30 @@ export default class Login extends React.Component{
       }
     })
     AsyncStorage.setItem('invest',invest);
-    // alert(JSON.stringify(AsyncStorage.getItem()))
-    AsyncStorage.getItem('invest').then(v=>{alert(v)})
+
+    // AsyncStorage.getItem('invest').then(v=>{alert(v)})
+
+    const name=this.state.name;
+    const pass=this.state.pass;
+
+    if(name==='chen'&&String(pass)==='123456'){
+      this.props.navigation.navigate('Index')
+    }else{
+      ToastAndroid.show('您的账户或者密码错误！',10000)
+    }
+  }
+  togglePassStatus(v){
+
+    // this
+
+    
+    const message=v?'您已忘记账户':'您已记住账户';
+    ToastAndroid.show(message,200);
+    
+    this.setState({
+      status:!v
+    })
+   
   }
 }
 
