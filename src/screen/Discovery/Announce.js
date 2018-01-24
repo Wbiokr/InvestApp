@@ -6,7 +6,7 @@ import {
 
 export default class Home extends React.Component{
   render(){
-    return <View>
+    return <View style={{backgroundColor:'#f9f9f9',flex:1,}}>
               <Text>公告也</Text>
             </View>
   }

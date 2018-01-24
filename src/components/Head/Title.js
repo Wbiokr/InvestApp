@@ -28,9 +28,9 @@ const styles = StyleSheet.create({
     backgroundColor:'#fff',
     justifyContent:'center',
     alignItems:'center',
-    top:0,
-    left:0,
-    borderBottomColor:'#dedede',
+    // top:0,
+    // left:0,
+    borderBottomColor:'#efefef',
     borderBottomWidth:1,
   },
   txt:{

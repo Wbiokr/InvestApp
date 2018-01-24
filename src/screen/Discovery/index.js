@@ -42,15 +42,17 @@ export default TabNavigator(
       inactiveTintColor:'#333',
       labelStyle:{
         fontSize:16,
-        paddingVertical:13,
+        paddingVertical:10,
         // borderBottomColor:'#ca6',
         // borderBottomWidth:2,
       },
       style:{
-        height:50,
-        borderBottomColor:'#ccc',
-        marginTop:50,
+        height:40,
+        // borderBottomColor:'#ccc',
         backgroundColor:'#fff',
+        borderBottomColor:'#dedede',
+        borderBottomWidth:1,
+        borderTopWidth:0,
       }
     }
   }

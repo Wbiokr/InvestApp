@@ -20,7 +20,7 @@ import {
 import Title from '../components/Head/Title';
 
 const Dis=()=>(
-  <View><Title title='发现' /><Discovery /></View>
+  <View style={{flex:1}}><Title title='发现' /><View style={{flex:1}}><Discovery /></View></View>
 )
 
 const Product=()=>(
