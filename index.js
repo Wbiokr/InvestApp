@@ -1,5 +1,7 @@
 import { AppRegistry,Platform,UIManager } from 'react-native';
-import App from './src/Main';
+
+
+import App from './src/screen/Discovery/newIndex';
 
 
 if(Platform.OS.toLowerCase()==='android'){

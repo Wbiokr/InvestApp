@@ -3,6 +3,7 @@ import React from 'react';
 import {
   TabNavigator,
   TabBarBottom, 
+  TabBarTop,
 } from 'react-navigation'
 
 import Discovery from './Discovery/';
@@ -15,6 +16,7 @@ import {yd} from '../deploy/Color';
 import {
   View,
   Text,
+  Image
 } from 'react-native';
 
 import Title from '../components/Head/Title';
@@ -33,27 +35,48 @@ export default TabNavigator(
       screen:Home,
       navigationOptions:{
         tabBarLabel:'首页',
+        tabBarIcon({tintColor}){
+          return <Image 
+                  resizeMode='stretch'
+                  style={{height:10,width:30,tintColor}}  
+                  source={require('../images/active/icon4.png')}
+                />}
       }
     },
     Pro:{
       screen:Product,
       navigationOptions:{
-        tabBarLabel:'理财'
+        tabBarLabel:'理财',
+        tabBarIcon({tintColor}){
+          return <Image 
+                  resizeMode='stretch'
+                  style={{height:10,width:30,tintColor}}  
+                  source={require('../images/active/icon4.png')}
+                />}
       }
     },
     Discovery:{
       screen:Dis,
       navigationOptions:{
         tabBarLabel:'发现',
+        tabBarIcon({tintColor}){
+          return <Image 
+                  resizeMode='stretch'
+                  style={{height:10,width:30,tintColor}}  
+                  source={require('../images/active/icon4.png')}
+                />}
       }
     },
     Mine:{
       screen:Mine,
       navigationOptions:{
         tabBarLabel:'我的',
-        indicatorStyle:{
-          height:0,
-        }
+        tabBarIcon({tintColor}){
+              return <Image 
+                      resizeMode='stretch'
+                      style={{height:10,width:30,tintColor}}  
+                      source={require('../images/active/icon4.png')}
+                    />}
       }
     },
   },
@@ -67,6 +90,8 @@ export default TabNavigator(
     tabBarOptions:{
       activeTintColor:'#ca6',
       inactiveTintColor:'#666',
+      showIcon:true,
+      showLabel:true,
       labelStyle:{
         // color:'red'
         fontSize:14,

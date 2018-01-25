@@ -10,7 +10,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   LayoutAnimation,
-  ToastAndroid,
+  // ToastAndroid,
   AsyncStorage
 } from 'react-native';
 
@@ -48,7 +48,7 @@ export default class Login extends React.Component{
                 } 
                 keyboardType='default'
                 placeholder='username'
-                underlineColorAndroid='transparent' 
+                // underlineColorAndroid='transparent' 
                 maxLength={10} 
                 ref='name'
                 defaultValue={this.state.name}
@@ -162,7 +162,7 @@ export default class Login extends React.Component{
     if(name==='chen'&&String(pass)==='123456'){
       this.props.navigation.navigate('Index')
     }else{
-      ToastAndroid.show('您的账户或者密码错误！',10000)
+      // ToastAndroid.show('您的账户或者密码错误！',10000)
     }
   }
   togglePassStatus(v){
@@ -171,7 +171,7 @@ export default class Login extends React.Component{
 
     
     const message=v?'您已忘记账户':'您已记住账户';
-    ToastAndroid.show(message,200);
+    // ToastAndroid.show(message,200);
     
     this.setState({
       status:!v
