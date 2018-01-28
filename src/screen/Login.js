@@ -60,19 +60,17 @@ export default class Login extends React.Component{
             </View>
             <View style={styles.name}>
               <Text style={[{width:50},styles.height]}>pass:</Text>
-              <TextInput style={
-                  [{flex:1},styles.center,styles.height,styles.input]
-                } 
-                keyboardType='numeric'
+              <TextInput
+                // keyboardType='numeric'
                 secureTextEntry={true}
-                placeholder='password'
-                underlineColorAndroid='transparent'  
-                maxLength={12}
-                ref='pass'
-                defaultValue={this.state.pass}
-                onChangeText={(pass)=>{
-                  this.setState({pass})
-                }}
+                // placeholder='password'
+                // underlineColorAndroid='transparent'  
+                // maxLength={12}
+                // ref='pass'
+                // defaultValue={this.state.pass}
+                // onChangeText={(pass)=>{
+                //   this.setState({pass})
+                // }}
               />
             </View>
           </View>
