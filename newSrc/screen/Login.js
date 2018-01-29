@@ -76,6 +76,9 @@ export default class Login extends React.Component{
       </View>
     )
   }
+  componentDidMount(){
+    this.props.navigation.navigate('Index')
+  }
   _upDateName=(name)=>{
     this.setState({name});
     console.log(this.state)

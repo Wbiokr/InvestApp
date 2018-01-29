@@ -32,14 +32,14 @@ export default StackNavigator(
     }
   },
   {
-    initialRouteName:'Index',
+    initialRouteName:'Login',
     initialRouteParams:{
       name:'chen'
     },
     navigationOptions:{
 
     },
-    headerMode:'none',
+    headerMode:'float',
     mode:'modal',
   }
 )

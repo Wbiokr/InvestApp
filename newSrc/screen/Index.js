@@ -20,16 +20,49 @@ import Wallet from './Wallet/';
 
 import colors from '../utils/color';
 
+const Left=()=>{
+  return(
+    <View >
+      <Text style={styles.arrow}>Left</Text>
+    </View>
+  )
+}
+const Right=()=>(
+  <View >
+    <Text style={styles.arrow}>Right</Text>
+  </View>
+)
+
+const Title=()=>(
+  <View style={{alignSelf:'center'}}>
+    <Text style={[styles.arrow,{fontSize:16}]}>遥望-2018</Text>
+  </View>
+)
+
 export default TabNavigator(
   {
     Home:{
       screen:Home,
       navigationOptions:{
-        title:'yem',
         tabBarIcon:({tintColor})=>(
             <Image resizeMode='contain' source={require('../img/icon/home.png')} style={[styles.icon,{tintColor:tintColor}]} />
         ),
-        headerTitle:'首页'
+        headerTitle:<Title />,
+        headerBackTitle:null,
+        headerLeft:<Left />,
+        headerRight:<Right />,
+        headerStyle:{
+          backgroundColor:colors.blue,
+          justifyContent:'center',
+          paddingHorizontal:10,
+          height:34,
+        },
+        headerTitleStyle:{
+          alignSelf:'center',
+          color:colors.white,
+          fontSize:14,
+          fontWeight:'500',
+        }
       }
     },
     History:{
@@ -38,7 +71,8 @@ export default TabNavigator(
         tabBarLabel:'History',
         tabBarIcon:({tintColor})=>(
           <Image resizeMode='contain' source={require('../img/icon/history.png')} style={[styles.icon,{tintColor}]} />
-      )
+        ),
+        header:null,
       }
     },
     Now:{
@@ -47,7 +81,8 @@ export default TabNavigator(
         tabBarLabel:'Now',
         tabBarIcon:({tintColor})=>(
           <Image resizeMode='contain' source={require('../img/icon/now.png')} style={[styles.icon,{tintColor}]} />
-       )
+       ),
+       header:null,
       }
     },
     Wallet:{
@@ -56,7 +91,8 @@ export default TabNavigator(
         tabBarLabel:'Wallet',
         tabBarIcon:({tintColor})=>(
           <Image resizeMode='contain' source={require('../img/icon/wallet.png')} style={[styles.icon,{tintColor}]} />
-        )
+        ),
+        header:null,
       }
     }
   },
@@ -66,10 +102,10 @@ export default TabNavigator(
     tabBarPosition:'bottom',
     swipeEnabled:true,
     animationEnabled:true,
-    navigationOptions:{
-      title:'发现',
-      headerTitle:'你好'
-    },
+    // navigationOptions:{
+    //   title:'发现',
+    //   headerTitle:'你好'
+    // },
     tabBarOptions:{
       style:{
         backgroundColor:colors.white,
@@ -98,5 +134,9 @@ export default TabNavigator(
 const styles=StyleSheet.create({
   icon:{
     height:23
+  },
+  arrow:{
+    fontSize:12,
+    color:colors.white,
   }
 })
