@@ -14,4 +14,5 @@ export default {
   gray7:'#999',//边框颜色，place,disable
   gray8:'#f0f0f0',
   gray9:'#efefef',
+  gray10:'#f7f7f7',
 }

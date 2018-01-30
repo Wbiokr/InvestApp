@@ -83,7 +83,7 @@ export default TabNavigator(
     }
   },
   {
-    initialRouteName:'Wallet',
+    initialRouteName:'Home',
     tabBarComponent:TabBarBottom,
     tabBarPosition:'bottom',
     swipeEnabled:true,

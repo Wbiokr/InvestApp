@@ -11,6 +11,10 @@ import {
   BackHandler,
   Platform,
   ToastAndroid,
+  ActivityIndicator,
+  RefreshControl,
+  PanResponder,
+  // fetch,
 } from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
@@ -24,32 +28,33 @@ export default class App extends React.Component{
     super(props);
     this.state={
       cash:[
-        {name:'fds',num:2323,unit:'元'},
-        {name:'fds',num:2323,unit:'元'},
-        {name:'fds',num:2323,unit:'元'},
-        {name:'fds',num:2323,unit:'元'},
-        {name:'fds',num:2323,unit:'元'},
-        {name:'fds',num:2323,unit:'元'},
-        {name:'fds',num:2323,unit:'元'},
-        {name:'fds',num:2323,unit:'元'},
-        {name:'fds',num:2323,unit:'元'},
-        {name:'fds',num:2323,unit:'元'},
+        // {name:'利民网',cash:1000,rate:100,startTime:'2018-10-24',endTime:12,},
+        // {name:'利民网',cash:1000,rate:100,startTime:'2018-10-24',endTime:12,},
+        // {name:'利民网',cash:1000,rate:100,startTime:'2018-10-24',endTime:12,},
+        // {name:'利民网',cash:1000,rate:100,startTime:'2018-10-24',endTime:12,},
       ],
       currentState:AppState.currentState,
-      startTime:0
+      startTime:0,
+      loading:true,
+      loadMore:false,
     }
   }
   render(){
     return(
       <LinearGradient 
-          colors={[colors.gray1,colors.white]}
+          colors={[colors.gray1,colors.gray9]}
           style={{flex:1}}
         >
-        <View style={styles.HeaderBox}>
+
+        <View style={styles.HeaderBox} >
           <Text style={styles.HeaderTil}>总在投金额</Text>
           <Text style={styles.HeaderCnt}>10000<Text>元</Text></Text>
         </View>  
-
+        <View style={{flex:1,justifyContent:'center',alignItems:'center',display:this.state.loading?'flex':'none'}}>
+  
+          <ActivityIndicator color={colors.blue} size='large' animating={true}  style={{transform:[{scaleX:1.8},{scaleY:1.8}]}}/>
+          
+        </View>
         <FlatList 
           contentContainerStyle={styles.content}
           horizontal={false}
@@ -58,17 +63,94 @@ export default class App extends React.Component{
           showsVerticalScrollIndicator={true}
           pagingEnabled={true}
           scrollEnabled={true}
+          // refreshControl={
+          //   <RefreshControl 
+          //     refreshing={this.state.loadMore}
+          //     onRefresh={()=>{
+          //       this.setState({loadMore:true})
+          //       setTimeout(()=>{this.setState({loadMore:false})},1000)
+          //     }}
+          //     // size='small'
+          //     colors={[colors.green,colors.blue]}
+          //   />
+          // }
           data={this.state.cash}
           renderItem={this._renderItem}
           keyExtractor={(item,index)=>index}
           ItemSeparatorComponent={this._renderSep}
-          ListFooterComponent={this._renderFooter}
-          ListHeaderComponent={this._renderHeader}
+          // ListFooterComponent={this._renderFooter}
+          // ListHeaderComponent={this._renderHeader}
+          {...this.panResponder.panHandlers}
         />
       </LinearGradient>
     )
   }
+  componentWillMount(){
+    this.panResponder=PanResponder.create({
+      //要求成为响应者,返回布尔值true表示愿意成为响应者
+      onStartShouldSetPanResponder(event,gestureState){
+        return true;
+      },
+      //表示 父组件会劫持这个响应事件，自己成为响应者
+      onStartShouldSetResponderCapture(event,gestureState){
+        return true;
+      },
+
+      //触摸的过程中，是否愿意成为响应者
+      onMoveShouldSetPanResponder(event,gestureState){
+        return true;
+      },
+      // 表示滑动过程中，父组件会劫持这个响应事件，自己成为响应者
+      onMoveShouldSetPanResponderCapture(event,gestureState){
+        return true;
+      },
+
+      //表示申请成功，成为了事件响应者，这个时候开始，组件就进入激活状态
+      onPanResponderGrant(event,gestureState){
+        console.log('申请成功')
+      },
+      //表示申请失败，其他组件正在进行事件处理，并且那个优先级别高的人不愿意放弃事件处理，只能等着
+      onPanResponderReject(event,gestureState){
+        console.log('申请失败')
+      },
+
+      // 申请成功之后，监听接下来的事件
+      // 表示手指按下时候，成功申请为事件响应者的回调
+      onRespinderStart(event,gestureState){
+        console.log('开始')
+      },
+      // 手机拖动箭筒
+      onPanResponderMove(event,gestureState){
+        console.log('移动')
+        console.log(event.nativeEvent,gestureState)
+      },
+      // 触摸事件完成，并且释放了手指
+      onPanResponderRelease(event,gestureState){
+        console.log(10)
+        console.log(event.nativeEvent,gestureState)
+      },
+      // 结束了事件响应的回调
+      onPanResponderEnd(event,gestureState){
+        console.log(7)
+        console.log(event.nativeEvent,gestureState)
+      },
+      // 另一个组件成为了新的响应者
+      onPanResponderTerminate(){
+        console.log('newe')
+      },
+      onPanResponderTerminationRequest(event,gestureState){
+        console.log(8)
+        console.log(event.nativeEvent,gestureState)
+      },
+      //决定当前组件是否应该阻止原生组件成为JS响应者（仅支持Android）
+      onShouldBlockNativeResponder(event,gestureState){
+        return true;
+      },
+      
+    })
+  }
   componentDidMount(){
+    this._getCash();
     AppState.addEventListener('change',this._handleChange)
     if(Platform.OS.toLowerCase()==='android'){
       BackHandler.addEventListener('hardwareBackPress',this._backHandle)
@@ -78,7 +160,8 @@ export default class App extends React.Component{
     AppState.removeEventListener('change');
     if(Platform.OS.toLowerCase()==='android'){
       BackHandler.removeEventListener('hardwareBackPress',this._backHandle)
-    }
+    };
+    
   }
 
   _backHandle=()=>{
@@ -108,16 +191,33 @@ export default class App extends React.Component{
   _renderItem({item,index}){
     const payload=item;
     return(
-      <TouchableOpacity key={index} activeOpacity={0.9}>
+      <TouchableOpacity key={index} activeOpacity={0.7}>
         <View style={styles.itemBox}>
-          <Text style={styles.itemTitle}>总金额{payload.name}</Text>
-          <Text style={styles.itemSaying}>{payload.num}<Text style={{fontSize:12}}>{payload.unit}</Text><Text style={{fontSize:20,fontFamily:'simSun'}}>></Text></Text>
+           <View style={styles.itemTitle}>
+              <Text style={[styles.itemTitleTxt]}>{item.name}</Text>
+              <Text style={[styles.itemTitleTxt,{color:colors.blue}]}>{item.endTime}元</Text>
+           </View>
+
+           <View style={styles.itemCnt}>
+              <View style={styles.itemCntItem}>
+                <Text style={styles.itemCntItemTop}>{item.startTime}</Text>
+                <Text style={styles.itemCntItemBottom}>成交时间</Text>
+              </View>
+              <View style={styles.itemCntItem}> 
+                <Text style={[styles.itemCntItemTop,{textAlign:'center'}]}>{item.cash}</Text>
+                <Text style={[styles.itemCntItemBottom,{textAlign:'center'}]}>投资金额</Text>
+              </View>
+              <View style={styles.itemCntItem}>
+                <Text style={[styles.itemCntItemTop,{textAlign:'right'}]}>{item.rate}</Text>
+                <Text style={[styles.itemCntItemBottom,{textAlign:'right'}]}>总利息</Text>
+              </View>
+           </View>
         </View>
       </TouchableOpacity>
     )
   }
   _renderSep(){
-    return <View style={{height:0.8,backgroundColor:colors.gray4,width:'100%'}}></View>
+    return <View style={{height:10,backgroundColor:'transparent',width:'100%'}}></View>
   }
   _renderFooter(){
     return <View style={{paddingVertical:10,borderTopColor:colors.blue,borderTopWidth:0.5}}><Text style={{fontSize:12,color:colors.blue,textAlign:'center'}}>到底了！！！！！！！</Text></View>
@@ -125,11 +225,61 @@ export default class App extends React.Component{
   _renderHeader(){
     return <View style={{paddingVertical:5,borderBottomColor:colors.blue,borderBottomWidth:0.5}}><Text style={{fontSize:12,color:colors.blue,textAlign:'center'}}>Pull to Refresh</Text></View>
   }
+  _getCash=()=>{
+    // alert(1212)
+    
+    fetch('http://192.168.1.101:7080/invest',{
+      method:'GET'
+    })
+    .then(res=>res.json())
+    .then(res=>{
+        setTimeout(()=>{this.setState({
+          loading:false,
+        })
+        if(Number(res.code)===1){
+          this.setState({
+            cash:res.result
+          })
+        }else{
+          ToastAndroid.show(res.msg,ToastAndroid.SHORT)
+        }
+      },800)
+      
+    })
+    .catch(err=>console.log(err))
+    .done(()=>{
+      
+    })
+    // fetch('https://tapi.youdingkeji.com/yiding-rest/rest/message/getHistoryEvent.json', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/x-www-form-urlencoded',
+    //   },
+    //   body: formatParams({
+    //     page:1,
+    //     versionName: ''
+    //   })
+
+    // })
+    // .then(res=>res.json())
+    // .then(res=>console.log(res))
+    // .catch(err=>console.log(err))
+    // .done()
+  }
 }
+
+// function formatParams(data){
+//   let arr = [];
+//   for (let name in data) {
+//       arr.push(encodeURIComponent(name) + "=" + encodeURIComponent(data[name]));
+//   }
+//   arr.push(("v=" + Math.random()).replace(".", ""));
+//   return arr.join("&");
+// };
 
 const styles=StyleSheet.create({
   HeaderBox:{
-    height:180,
+    height:130,
     flexDirection:'column',
     justifyContent:'center',
     alignItems:'center',
@@ -147,24 +297,45 @@ const styles=StyleSheet.create({
     color:colors.white
   },
   content:{
-    paddingHorizontal:20
+    // paddingHorizontal:20
   },
   itemBox:{
     paddingVertical:10,
     paddingHorizontal:20,
-    flexDirection:'row',
-    justifyContent:'space-between',
+    flexDirection:'column',
+    justifyContent:'flex-start',
+    backgroundColor:colors.gray10,
   },
   itemTitle:{
-    fontSize:20,
-    lineHeight:30,
-    color:colors.blue
-  },
-  itemSaying:{
+    borderBottomColor:colors.gray1,
+    borderBottomWidth:1,
+    flexDirection:'row',
+    justifyContent:'space-between',
     alignItems:'center',
-    justifyContent:'center',
-    lineHeight:30,
-    fontSize:16,
-    color:colors.orange,
-  }
+  },
+  itemTitleTxt:{
+    fontSize:15,
+    color:colors.gray5,
+    height:30,
+    lineHeight:20
+  },
+  itemCnt:{
+    flexDirection:'row',
+    justifyContent:'space-between',
+    alignItems:'center',
+  },
+  itemCntItem:{
+    paddingTop:6,
+    flex:1,
+  },
+  itemCntItemTop:{
+    fontSize:13,
+    color:colors.gray3,
+    lineHeight:20,
+  },
+  itemCntItemBottom:{
+    fontSize:10,
+    color:colors.gray7,
+    lineHeight:15,
+  } 
 })
