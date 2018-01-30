@@ -11,7 +11,9 @@ import {
 } from 'react-navigation';
 
 import Login from './screen/Login';
-// import Index from './screen/Discovery';
+import Index from './screen/Discovery';
+// import 
+
 
 import './deploy/';
 

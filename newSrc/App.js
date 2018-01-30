@@ -13,6 +13,7 @@ import {
 
 import Login from './screen/Login';
 import Index from './screen/Index';
+// import Pass from './screen/Pass';
 
 // AsyncStorage
 
@@ -29,7 +30,13 @@ export default StackNavigator(
       // navigationOptions:{
       //   headerTitle:'主要页面'
       // }
-    }
+    },
+    // Pass:{
+    //   screen:Pass,
+    //   navigationOptions:{
+    //     header:null
+    //   }
+    // }
   },
   {
     initialRouteName:'Login',
