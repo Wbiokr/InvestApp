@@ -23,6 +23,11 @@ import {PullView} from 'react-native-pull';
 
 import colors from '../../utils/color';
 
+import url from '../../utils/api'
+
+
+const investing=url.investing
+
 export default class App extends React.Component{
   constructor(props){
     super(props);
@@ -195,7 +200,7 @@ export default class App extends React.Component{
         <View style={styles.itemBox}>
            <View style={styles.itemTitle}>
               <Text style={[styles.itemTitleTxt]}>{item.name}</Text>
-              <Text style={[styles.itemTitleTxt,{color:colors.blue}]}>{item.endTime}元</Text>
+              <Text style={[styles.itemTitleTxt,{color:colors.blue}]}>{item.endTime}天</Text>
            </View>
 
            <View style={styles.itemCnt}>
@@ -226,10 +231,12 @@ export default class App extends React.Component{
     return <View style={{paddingVertical:5,borderBottomColor:colors.blue,borderBottomWidth:0.5}}><Text style={{fontSize:12,color:colors.blue,textAlign:'center'}}>Pull to Refresh</Text></View>
   }
   _getCash=()=>{
-    // alert(1212)
-    
-    fetch('http://192.168.1.101:7080/invest',{
-      method:'GET'
+    fetch(investing,{
+      method:'POST',
+      body:{
+        page:23,
+        name:'fsdfds'
+      }
     })
     .then(res=>res.json())
     .then(res=>{
@@ -243,28 +250,14 @@ export default class App extends React.Component{
         }else{
           ToastAndroid.show(res.msg,ToastAndroid.SHORT)
         }
-      },800)
+      },10)
       
     })
     .catch(err=>console.log(err))
     .done(()=>{
       
     })
-    // fetch('https://tapi.youdingkeji.com/yiding-rest/rest/message/getHistoryEvent.json', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/x-www-form-urlencoded',
-    //   },
-    //   body: formatParams({
-    //     page:1,
-    //     versionName: ''
-    //   })
-
-    // })
-    // .then(res=>res.json())
-    // .then(res=>console.log(res))
-    // .catch(err=>console.log(err))
-    // .done()
+    
   }
 }
 
