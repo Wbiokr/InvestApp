@@ -8,7 +8,15 @@ import {
   ScrollView
 } from 'react-native';
 
+import {
+  Avatar, 
+  // Icon,
+} from 'react-native-elements';
+
+import  Icon from 'react-native-vector-icons/FontAwesome';
+
 import colors from '../../utils/color';
+
 
 export default class App extends React.Component{
   render(){
@@ -16,8 +24,19 @@ export default class App extends React.Component{
       <ScrollView style={{backgroundColor:colors.gray9}}>
         <View style={styles.headerBox}>
           <View style={styles.headerTop}>
-            <View style={styles.photoBox}>
-              <Image source={require('../../img/photo.jpg')} style={styles.photo}></Image>
+            <View >
+              {
+                // <Image source={require('../../img/photo.jpg')} style={styles.photo}></Image>
+              }
+              <Avatar 
+                medium
+                rounded
+                source={require('../../img/photo.jpg')}
+                onPress={()=>{}}
+                activeOpacity={0.7}
+                containerStyle={{backgroundColor:'#fff',transform:[{scaleX:1.4},{scaleY:1.4}]}}
+                avatarStyle={{transform:[{scaleX:0.95},{scaleY:0.95}]}}
+              />
             </View>
             <Text style={[styles.headerTxt,styles.headerTxtBr]}>151****8960</Text>
             <Text style={styles.headerTxt}>wbiokr</Text>
@@ -35,7 +54,14 @@ export default class App extends React.Component{
           </View>
 
           <View >
-            <Text style={styles.headerBottom}>账户受法律保护</Text>
+            
+            <Text style={styles.headerBottom}>
+              <Icon 
+                name='copyright'
+                size={10}
+              />
+              <Text>&nbsp;&nbsp;账户受法律保护</Text>  
+            </Text>
           </View>
         </View>
 
@@ -43,61 +69,41 @@ export default class App extends React.Component{
           <View style={styles.contentItem}>
             <Text style={styles.contentItemLeft}>固定金额</Text>
             <Text style={styles.contentItemRight}>12121</Text>
-            <Text style={styles.arront}>》</Text>
+            <Text style={styles.arront}><Icon name='angle-right' size={25}/></Text>
           </View>
-
           <View style={styles.contentItem}>
             <Text style={styles.contentItemLeft}>固定金额</Text>
             <Text style={styles.contentItemRight}>12121</Text>
-            <Text style={styles.arront}>》</Text>
+            <Text style={styles.arront}><Icon name='angle-right' size={25}/></Text>
           </View>
-
           <View style={styles.contentItem}>
             <Text style={styles.contentItemLeft}>固定金额</Text>
             <Text style={styles.contentItemRight}>12121</Text>
-            <Text style={styles.arront}>》</Text>
+            <Text style={styles.arront}><Icon name='angle-right' size={25}/></Text>
           </View>
+         
         </View>
 
-        <View style={styles.contentBox}>
+        <View style={[styles.contentBox]}>
           <View style={styles.contentItem}>
             <Text style={styles.contentItemLeft}>固定金额</Text>
             <Text style={styles.contentItemRight}>12121</Text>
-            <Text style={styles.arront}>》</Text>
+            <Text style={styles.arront}><Icon name='angle-right' size={25}/></Text>
           </View>
-
           <View style={styles.contentItem}>
             <Text style={styles.contentItemLeft}>固定金额</Text>
             <Text style={styles.contentItemRight}>12121</Text>
-            <Text style={styles.arront}>》</Text>
+            <Text style={styles.arront}><Icon name='angle-right' size={25}/></Text>
           </View>
-
           <View style={styles.contentItem}>
             <Text style={styles.contentItemLeft}>固定金额</Text>
             <Text style={styles.contentItemRight}>12121</Text>
-            <Text style={styles.arront}>》</Text>
+            <Text style={styles.arront}><Icon name='angle-right' size={25}/></Text>
           </View>
+         
         </View>
 
-        <View style={styles.contentBox}>
-          <View style={styles.contentItem}>
-            <Text style={styles.contentItemLeft}>固定金额</Text>
-            <Text style={styles.contentItemRight}>12121</Text>
-            <Text style={styles.arront}>》</Text>
-          </View>
-
-          <View style={styles.contentItem}>
-            <Text style={styles.contentItemLeft}>固定金额</Text>
-            <Text style={styles.contentItemRight}>12121</Text>
-            <Text style={styles.arront}>》</Text>
-          </View>
-
-          <View style={styles.contentItem}>
-            <Text style={styles.contentItemLeft}>固定金额</Text>
-            <Text style={styles.contentItemRight}>12121</Text>
-            <Text style={styles.arront}>》</Text>
-          </View>
-        </View>
+        
         
       </ScrollView>
     )
@@ -112,7 +118,7 @@ const styles=StyleSheet.create({
   },
   headerTop:{
     paddingHorizontal:30,
-    marginTop:30,
+    marginTop:20,
     flexDirection:'row',
     justifyContent:'flex-start',
     alignItems:'center',
@@ -123,14 +129,14 @@ const styles=StyleSheet.create({
     borderRadius:28,
     overflow:'hidden',
   },
-  photoBox:{
-    height:60,
-    width:60,
-    backgroundColor:colors.gray8,
-    borderRadius:31,
-    overflow:'hidden',
-    padding:2
-  },
+  // photoBox:{
+  //   // height:60,
+  //   // width:60,
+  //   backgroundColor:colors.gray8,
+  //   // borderRadius:31,
+  //   overflow:'hidden',
+  //   padding:2
+  // },
   headerTxt:{
     color:colors.gray8,
     fontSize:14,
@@ -190,7 +196,7 @@ const styles=StyleSheet.create({
   },
   arront:{
     position:'absolute',
-    right:5,
+    right:15,
     top:'50%',
     fontSize:20,
     color:colors.gray4,

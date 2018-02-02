@@ -25,6 +25,7 @@ import colors from '../../utils/color';
 
 import url from '../../utils/api'
 
+import format from '../../utils/format';
 
 const investing=url.investing
 
@@ -231,12 +232,15 @@ export default class App extends React.Component{
     return <View style={{paddingVertical:5,borderBottomColor:colors.blue,borderBottomWidth:0.5}}><Text style={{fontSize:12,color:colors.blue,textAlign:'center'}}>Pull to Refresh</Text></View>
   }
   _getCash=()=>{
+    console.log(investing)
     fetch(investing,{
       method:'POST',
-      body:{
-        page:23,
-        name:'fsdfds'
-      }
+      headers:{
+        "Content-Type":'application/x-www-form-urlencoded',
+      },
+      body:format({
+        page:1,
+      })
     })
     .then(res=>res.json())
     .then(res=>{
@@ -250,7 +254,7 @@ export default class App extends React.Component{
         }else{
           ToastAndroid.show(res.msg,ToastAndroid.SHORT)
         }
-      },10)
+      },1)
       
     })
     .catch(err=>console.log(err))
@@ -261,14 +265,7 @@ export default class App extends React.Component{
   }
 }
 
-// function formatParams(data){
-//   let arr = [];
-//   for (let name in data) {
-//       arr.push(encodeURIComponent(name) + "=" + encodeURIComponent(data[name]));
-//   }
-//   arr.push(("v=" + Math.random()).replace(".", ""));
-//   return arr.join("&");
-// };
+
 
 const styles=StyleSheet.create({
   HeaderBox:{

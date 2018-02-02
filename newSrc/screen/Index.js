@@ -14,22 +14,23 @@ import {
 } from 'react-navigation';
 
 import Home from './Home/';
-// import History from './History/';
-// import Now from './Now/';
 import Wallet from './Wallet/';
+import Add from './Add/';
 
 import colors from '../utils/color';
+
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Left=()=>{
   return(
     <View >
-      <Text style={styles.arrow}>Left</Text>
+      <Text style={styles.arrow}><Icon name='th-large' /></Text>
     </View>
   )
 }
 const Right=()=>(
   <View >
-    <Text style={styles.arrow}>Right</Text>
+    <Text style={styles.arrow}><Icon name='search' /></Text>
   </View>
 )
 
@@ -47,30 +48,20 @@ export default TabNavigator(
         tabBarIcon:({tintColor})=>(
             <Image resizeMode='contain' source={require('../img/icon/home.png')} style={[styles.icon,{tintColor:tintColor}]} />
         ),
-        headerTitle:<Title title='投资' />,
+        headerTitle:<Title title='在投羊毛' />,
         
       }
     },
-    // History:{
-    //   screen:History,
-    //   navigationOptions:{
-    //     tabBarLabel:'History',
-    //     tabBarIcon:({tintColor})=>(
-    //       <Image resizeMode='contain' source={require('../img/icon/history.png')} style={[styles.icon,{tintColor}]} />
-    //     ),
-    //     header:null,
-    //   }
-    // },
-    // Now:{
-    //   screen:Now,
-    //   navigationOptions:{
-    //     tabBarLabel:'Now',
-    //     tabBarIcon:({tintColor})=>(
-    //       <Image resizeMode='contain' source={require('../img/icon/now.png')} style={[styles.icon,{tintColor}]} />
-    //    ),
-    //    header:null,
-    //   }
-    // },
+    Add:{
+      screen:Add,
+      navigationOptions:{
+        tabBarIcon:({tintColor})=>(
+          <Image resizeMode='contain' source={require('../img/icon/history.png')} style={[styles.icon,{tintColor}]} />
+        ),
+        headerTitle:<Title title='添加羊毛' />
+      },
+     
+    },
     Wallet:{
       screen:Wallet,
       navigationOptions:{
@@ -78,12 +69,12 @@ export default TabNavigator(
         tabBarIcon:({tintColor})=>(
           <Image resizeMode='contain' source={require('../img/icon/wallet.png')} style={[styles.icon,{tintColor}]} />
         ),
-        headerTitle:<Title title='钱包' />
+        headerTitle:<Title title='我的钱包' />
       }
     }
   },
   {
-    initialRouteName:'Home',
+    initialRouteName:'Wallet',
     tabBarComponent:TabBarBottom,
     tabBarPosition:'bottom',
     swipeEnabled:true,

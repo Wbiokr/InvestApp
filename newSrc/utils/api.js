@@ -1,4 +1,4 @@
-const env='dev'
+const env='pro'
 
 const agree=env==='dev'?'http://192.168.5.2:18080/':'http://wbiokr.duapp.com/';
 
