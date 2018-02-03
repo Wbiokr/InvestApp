@@ -74,7 +74,7 @@ export default TabNavigator(
     }
   },
   {
-    initialRouteName:'Wallet',
+    initialRouteName:'Add',
     tabBarComponent:TabBarBottom,
     tabBarPosition:'bottom',
     swipeEnabled:true,

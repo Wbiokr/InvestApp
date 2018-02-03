@@ -5,11 +5,15 @@ import {
   Text,
   Image,
   StyleSheet,
-  ScrollView
+  ScrollView,
+  TouchableHighlight,
+  TouchableOpacity,
 } from 'react-native';
 
 import {
   Avatar, 
+  List,
+  ListItem,
   // Icon,
 } from 'react-native-elements';
 
@@ -20,6 +24,24 @@ import colors from '../../utils/color';
 
 export default class App extends React.Component{
   render(){
+    const list=[
+      {
+        name:'中国银行',
+        logo:'zgyh',
+        cash:50,
+        types:[
+          {'余额':51}
+        ]
+      },
+      {
+        name:'中兴银行',
+        logo:'zxyh',
+        cash:50,
+        types:[
+          {'余额':51}
+        ]
+      }
+    ]
     return(
       <ScrollView style={{backgroundColor:colors.gray9}}>
         <View style={styles.headerBox}>
@@ -65,43 +87,33 @@ export default class App extends React.Component{
           </View>
         </View>
 
-        <View style={[styles.contentBox,{marginTop:0}]}>
-          <View style={styles.contentItem}>
-            <Text style={styles.contentItemLeft}>固定金额</Text>
-            <Text style={styles.contentItemRight}>12121</Text>
-            <Text style={styles.arront}><Icon name='angle-right' size={25}/></Text>
-          </View>
-          <View style={styles.contentItem}>
-            <Text style={styles.contentItemLeft}>固定金额</Text>
-            <Text style={styles.contentItemRight}>12121</Text>
-            <Text style={styles.arront}><Icon name='angle-right' size={25}/></Text>
-          </View>
-          <View style={styles.contentItem}>
-            <Text style={styles.contentItemLeft}>固定金额</Text>
-            <Text style={styles.contentItemRight}>12121</Text>
-            <Text style={styles.arront}><Icon name='angle-right' size={25}/></Text>
-          </View>
-         
-        </View>
+        <List containerStyle={{marginTop:0,borderTopWidth:0}}>
+          {
+            list.map((item,i)=>{
+              const url=`../../img/wallet/${item.logo}`
+              return <ListItem 
+                key={i}
+                component={TouchableHighlight}
+                activeOpacity={1}
+                underlayColor={colors.gray9}
+                avatar={
+                  <Avatar small rounded source={require('../../img/wallet/zxyh.png')}/>
+                }
+                // containerStyle={{marginTop:90}}
+                // wrapperStyle={{marginTop:0}}
+                title={String(item.name)}
+                rightTitle={String(item.cash)+'元'}
+                // switchButton
+                // hideChevron
+                // onSwitch={()=>{alert(1221)}}
+                // textInput
+                // onPress={()=>{alert(4554)}}
+                onLongPress={()=>{}}
+              />
+            })
+          }
+        </List>
 
-        <View style={[styles.contentBox]}>
-          <View style={styles.contentItem}>
-            <Text style={styles.contentItemLeft}>固定金额</Text>
-            <Text style={styles.contentItemRight}>12121</Text>
-            <Text style={styles.arront}><Icon name='angle-right' size={25}/></Text>
-          </View>
-          <View style={styles.contentItem}>
-            <Text style={styles.contentItemLeft}>固定金额</Text>
-            <Text style={styles.contentItemRight}>12121</Text>
-            <Text style={styles.arront}><Icon name='angle-right' size={25}/></Text>
-          </View>
-          <View style={styles.contentItem}>
-            <Text style={styles.contentItemLeft}>固定金额</Text>
-            <Text style={styles.contentItemRight}>12121</Text>
-            <Text style={styles.arront}><Icon name='angle-right' size={25}/></Text>
-          </View>
-         
-        </View>
 
         
         

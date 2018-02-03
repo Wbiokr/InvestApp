@@ -200,7 +200,7 @@ export default class App extends React.Component{
       <TouchableOpacity key={index} activeOpacity={0.7}>
         <View style={styles.itemBox}>
            <View style={styles.itemTitle}>
-              <Text style={[styles.itemTitleTxt]}>{item.name}</Text>
+              <Text style={[styles.itemTitleTxt]}>{item.name}<Text>-{item.phone}-{item.card}</Text> </Text>
               <Text style={[styles.itemTitleTxt,{color:colors.blue}]}>{item.endTime}天</Text>
            </View>
 
@@ -214,8 +214,8 @@ export default class App extends React.Component{
                 <Text style={[styles.itemCntItemBottom,{textAlign:'center'}]}>投资金额</Text>
               </View>
               <View style={styles.itemCntItem}>
-                <Text style={[styles.itemCntItemTop,{textAlign:'right'}]}>{item.rate}</Text>
-                <Text style={[styles.itemCntItemBottom,{textAlign:'right'}]}>总利息</Text>
+                <Text style={[styles.itemCntItemTop,{textAlign:'right'}]}>{item.rateAll}({item.rateHas})</Text>
+                <Text style={[styles.itemCntItemBottom,{textAlign:'right'}]}>总利息(已返)</Text>
               </View>
            </View>
         </View>
