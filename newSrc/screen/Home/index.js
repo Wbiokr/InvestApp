@@ -14,6 +14,7 @@ import {
   ActivityIndicator,
   RefreshControl,
   PanResponder,
+  // TouchableWithoutFeedback,
   // fetch,
 } from 'react-native';
 
@@ -27,23 +28,26 @@ import url from '../../utils/api'
 
 import format from '../../utils/format';
 
+import ShowLert from '../../components/show'
+
 const investing=url.investing
 
 export default class App extends React.Component{
   constructor(props){
     super(props);
+    // this._showMenu=this._showMenu.bind(this);
     this.state={
-      cash:[
-        // {name:'利民网',cash:1000,rate:100,startTime:'2018-10-24',endTime:12,},
-        // {name:'利民网',cash:1000,rate:100,startTime:'2018-10-24',endTime:12,},
-        // {name:'利民网',cash:1000,rate:100,startTime:'2018-10-24',endTime:12,},
-        // {name:'利民网',cash:1000,rate:100,startTime:'2018-10-24',endTime:12,},
-      ],
+      cash:[],
       currentState:AppState.currentState,
       startTime:0,
       loading:true,
       loadMore:false,
+      show:false,
+      x:10,
+      y:300,
+      item:{}
     }
+    this._renderItem=this._renderItem.bind(this)
   }
   render(){
     return(
@@ -88,6 +92,18 @@ export default class App extends React.Component{
           // ListHeaderComponent={this._renderHeader}
           {...this.panResponder.panHandlers}
         />
+
+        <ShowLert {
+          ...{
+            isShow:this.state.show,
+            x:this.state.x,
+            y:this.state.y,
+            edit:this._edit.bind(this,this.state.item),
+            remove:this._remove.bind(this,this.state.item),
+            reload:this._getCash.bind(this),
+            cancel:this._cancel.bind(this)
+          }
+        } />
       </LinearGradient>
     )
   }
@@ -194,12 +210,20 @@ export default class App extends React.Component{
       // alert('切换了')
     }
   }
+  
   _renderItem({item,index}){
     const payload=item;
+    
     return(
-      <TouchableOpacity key={index} activeOpacity={0.7}>
+      <TouchableOpacity 
+        key={index}
+        activeOpacity={0.7}
+        delayLongPress={100}
+        onLongPress={this._showMenu.bind(this)}
+        
+        >
         <View style={styles.itemBox}>
-           <View style={styles.itemTitle}>
+           <View style={styles.itemTitle }>
               <Text style={[styles.itemTitleTxt]}>{item.name}<Text>-{item.phone}-{item.card}</Text> </Text>
               <Text style={[styles.itemTitleTxt,{color:colors.blue}]}>{item.endTime}天</Text>
            </View>
@@ -231,8 +255,32 @@ export default class App extends React.Component{
   _renderHeader(){
     return <View style={{paddingVertical:5,borderBottomColor:colors.blue,borderBottomWidth:0.5}}><Text style={{fontSize:12,color:colors.blue,textAlign:'center'}}>Pull to Refresh</Text></View>
   }
+  _showMenu(e){
+    const x=e.nativeEvent.pageX;
+    const y=e.nativeEvent.pageY;
+
+    this.setState({
+      x,y,
+      show:true
+    })
+
+  }
+  _edit(item){
+    alert(1112)
+  }
+  _remove(item){
+    alert(22222222)
+  }
+  _cancel(){
+    this.setState({
+      show:false
+    })
+  }
   _getCash=()=>{
-    console.log(investing)
+    this.setState({
+      loading:true,
+      show:false,
+    })
     fetch(investing,{
       method:'POST',
       headers:{

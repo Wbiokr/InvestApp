@@ -19,20 +19,25 @@ import {
   Icon
 } from 'react-native-vector-icons';
 
-// import {
-//   Button
-// } from 'react-native-elements';
+import {
+  Button
+} from 'react-native-elements';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import colors  from '../../utils/color';
 
+import url from '../../utils/api'
+
+import format  from '../../utils/format'
+
 export default class Add extends React.Component{
   constructor(props){
     super(props)
     this.state={
-      opc:1,
-      bg:colors.gray4,
+      loading:false,
+      // opc:1,
+      // bg:colors.gray4,
       key:'',
       list:[
         {
@@ -61,7 +66,7 @@ export default class Add extends React.Component{
           key:'startTime',
         },
         {
-          label:'标的时间',
+          label:'标的周期',
           iconName:'hourglass-end',
           key:'endTime'
         },
@@ -86,16 +91,16 @@ export default class Add extends React.Component{
             <Fumi 
               key={i}
               label={item.label}
-              style={{borderBottomColor:colors.gray4,borderBottomWidth:1}}
-              labelStyle={{color:colors.gray7}}
+              style={{borderBottomColor:colors.gray1,borderBottomWidth:1,transform:[{scaleY:0.8}],marginTop:-8,backgroundColor:colors.white}}
+              labelStyle={{color:colors.gray7,fontSize:12,margin:0,padding:0}}
+              inputStyle={{color:colors.blue}}
               iconClass={FontAwesome}
               iconName={item.iconName}
-              iconColor={colors.greens}
-              iconSize={20}
+              iconColor={colors.orange}
+              iconSize={14}
               autoFocus={item.key===this.state.key}
               ref={item.key}
               onChangeText={(v)=>{
-                alert(v)
                 this.setState({
                   [item.key]:v
                 })
@@ -103,9 +108,27 @@ export default class Add extends React.Component{
             />
           ))
         }
-        <TouchableOpacity style={styles.btnBox} activeOpacity={this.state.opc} onPress={this.addMao}>
-          <Text style={[styles.btn,{backgroundColor:this.state.bg}]}>录入平台</Text>
-        </TouchableOpacity>
+        {
+          this.state.loading?<Button
+              title='提交中...'
+              raised
+              loading
+              backgroundColor={colors.blue}
+            />:
+            <Button
+              title='提交'
+              raised
+              backgroundColor={colors.blue}
+              containerViewStyle={{marginVertical:10,marginBottom:40}}
+              icon={{name: 'check'}}
+              onPress={this.addMao}
+            />
+        }
+        {
+          // <TouchableOpacity style={styles.btnBox} activeOpacity={this.state.opc} onPress={this.addMao}>
+          //   <Text style={[styles.btn,{backgroundColor:this.state.bg}]}>录入平台</Text>
+          // </TouchableOpacity>
+        }
       </ScrollView>
     )
   }
@@ -122,16 +145,96 @@ export default class Add extends React.Component{
       return ;
     }
     const cash=this.state.cash||'';
+    if(!cash){
+      ToastAndroid.show('请输入羊毛金额！',ToastAndroid.SHORT)
+      // this.refs.name.
+      this.setState({
+        key:'cash'
+      })
+      return ;
+    }
     const rateAll=this.state.rateAll||'';
+    if(!rateAll){
+      ToastAndroid.show('请输入总撸金额！',ToastAndroid.SHORT)
+      // this.refs.name.
+      this.setState({
+        key:'rateAll'
+      })
+      return ;
+    }
     const rateHas=this.state.rateHas||'';
+    if(!rateHas){
+      ToastAndroid.show('请输入已得返利！',ToastAndroid.SHORT)
+      // this.refs.name.
+      this.setState({
+        key:'rateHas'
+      })
+      return ;
+    }
     const startTime=this.state.startTime||'';
-    const endTime=this.setState.endTime||'';
+    if(!startTime){
+      ToastAndroid.show('请输入标的开始时间！',ToastAndroid.SHORT)
+      // this.refs.name.
+      this.setState({
+        key:'startTime'
+      })
+      // return ;
+    }
+    const endTime=this.state.endTime||'';
+    if(!endTime){
+      ToastAndroid.show('请输入标的周期！',ToastAndroid.SHORT)
+      // this.refs.name.
+      this.setState({
+        key:'endTime'
+      })
+      // return ;
+    }
     const phone=this.state.phone||'';
+    if(!phone){
+      ToastAndroid.show('请输入购买手机尾号！',ToastAndroid.SHORT)
+      // this.refs.name.
+      this.setState({
+        key:'phone'
+      })
+      // return ;
+    }
     const card=this.state.card||'';
-    const infor={name,cash,rateAll,rateHas,startTime,endTime,phone,card}
-    console.log(infor)
-    alert(JSON.stringify(infor))
- }
+    if(!card){
+      ToastAndroid.show('请输入购买身份证尾号！',ToastAndroid.SHORT)
+      // this.refs.name.
+      this.setState({
+        key:'card'
+      })
+      // return ;
+    }
+    const body=format({name,cash,rateAll,rateHas,startTime,endTime,phone,card})
+
+    alert(body)
+    // this.setState({
+    //   loading:true
+    // })
+
+
+    fetch(url.insert,{
+      method:'POST',
+      headers:{
+        "Content-Type":'application/x-www-form-urlencoded',
+      },
+      body,
+    }).then(res=>res.json())
+      .then(res=>{
+        this.setState({loading:false})
+        const status=Number(res.code);
+        ToastAndroid.show(res.msg,ToastAndroid.SHORT)
+        if(status===0){
+          // 信息为空
+          // ToastAndroid.show(res.msg,ToastAndroid)
+        }else if(status===-1){
+          // 失败
+
+        }
+      })
+  }
 }
 
 const styles=StyleSheet.create({

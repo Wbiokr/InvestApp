@@ -12,4 +12,6 @@ export default {
   investing:`${agree}investing`,
 
   invested:`${agree}invested`,
+
+  insert:`${agree}insert`,
 }
