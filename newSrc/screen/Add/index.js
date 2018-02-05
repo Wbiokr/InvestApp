@@ -209,11 +209,6 @@ export default class Add extends React.Component{
     }
     const body=format({name,cash,rateAll,rateHas,startTime,endTime,phone,card})
 
-    alert(body)
-    // this.setState({
-    //   loading:true
-    // })
-
 
     fetch(url.insert,{
       method:'POST',

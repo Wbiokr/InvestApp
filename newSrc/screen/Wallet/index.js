@@ -21,6 +21,8 @@ import  Icon from 'react-native-vector-icons/FontAwesome';
 
 import colors from '../../utils/color';
 
+import Pull from '../../components/pull';
+
 
 export default class App extends React.Component{
   render(){
@@ -86,6 +88,10 @@ export default class App extends React.Component{
             </Text>
           </View>
         </View>
+
+        <Pull 
+            containerStyle={{backgroundColor:'#333',height:200,}}
+        />
 
         <List containerStyle={{marginTop:0,borderTopWidth:0}}>
           {

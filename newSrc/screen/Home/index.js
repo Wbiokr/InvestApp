@@ -30,6 +30,8 @@ import format from '../../utils/format';
 
 import ShowLert from '../../components/show'
 
+import Pull from '../../components/pull'
+
 const investing=url.investing
 
 export default class App extends React.Component{
@@ -65,6 +67,9 @@ export default class App extends React.Component{
           <ActivityIndicator color={colors.blue} size='large' animating={true}  style={{transform:[{scaleX:1.8},{scaleY:1.8}]}}/>
           
         </View>
+        <Pull
+          
+        />
         <FlatList 
           contentContainerStyle={styles.content}
           horizontal={false}

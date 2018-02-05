@@ -44,6 +44,7 @@ export default TabNavigator(
   {
     Home:{
       screen:Home,
+      path:'/index/home',
       navigationOptions:{
         tabBarIcon:({tintColor})=>(
             <Image resizeMode='contain' source={require('../img/icon/home.png')} style={[styles.icon,{tintColor:tintColor}]} />
@@ -54,6 +55,7 @@ export default TabNavigator(
     },
     Add:{
       screen:Add,
+      path:'/index/add',
       navigationOptions:{
         tabBarIcon:({tintColor})=>(
           <Image resizeMode='contain' source={require('../img/icon/history.png')} style={[styles.icon,{tintColor}]} />
@@ -64,6 +66,7 @@ export default TabNavigator(
     },
     Wallet:{
       screen:Wallet,
+      path:'/index/wallet',
       navigationOptions:{
         tabBarLabel:'Wallet',
         tabBarIcon:({tintColor})=>(
@@ -74,7 +77,7 @@ export default TabNavigator(
     }
   },
   {
-    initialRouteName:'Home',
+    initialRouteName:'Wallet',
     tabBarComponent:TabBarBottom,
     tabBarPosition:'bottom',
     swipeEnabled:true,
