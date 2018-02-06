@@ -1,40 +1,58 @@
 import React from 'react';
 
+import PropTypes from 'prop-types';
+
 import {
+  FlatList,
   View,
   Text,
-  FlatList,
+  Image,
 } from 'react-native';
 
-import Icon from 'react-native-vector-icons/Ionicons';
-// ios-sync
+export default class Refrest extends React.Component{
+  static defaultProps={
+    data:[],
 
-export default class Pull extends React.Component{
-  constructor(props){
-    super(props)
   }
   render(){
-    const {emptyComponent}=this.props;
     return(
-      <FlatList
-        ListHeaderComponent={this.renderHeader}
-        ListFooterComponent={this.renderFooter}
-        ListEmptyComponent={emptyComponent}
+      <FlatList 
+        style={[{flex:1},this.props.style]}
+        ref='flatList'
+        data={this.props.data}
+        ItemSeparatorComponent={this.props.ItemSeparatorComponent}
+        ListEmptyComponent={this.props.ListEmptyComponent}
+        renderItem={this.props.renderItem}
+        initialNumToRender={this.props.initialNumToRender}
+        refreshing={this.props.refreshing}
+        keyExtractor={(item,index)=>{return String(index)}}
+        onRefresh={this.props.onRefresh}
+        onEndReachedThreshold={this.props.onEndReachedThreshold}
+        onEndReached={this.props.onEndReached}
       />
     )
   }
-  renderHeader(){
-    return(
-      <View>
-        <Text>header</Text>
-      </View>
-    )
-  }
-  renderFooter(){
-    return(
-      <View>
-        <Text>footer</Text>
-      </View>
-    )
-  }
 }
+
+Refrest.propTypes = {
+  data:PropTypes.array.isRequired,
+  renderItem:PropTypes.func.isRequired,
+  ListEmptyComponent:PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.func
+  ]),
+//  ListFooterComponent
+  ItemSeparatorComponent:PropTypes.oneOfType([
+    PropTypes.element,
+    PropTypes.func,
+  ]),
+  initialNumToRender:PropTypes.number,
+  onEndReached:PropTypes.func.isRequired,
+  onEndReachedThreshold:PropTypes.number.isRequired,
+  refreshing:PropTypes.bool.isRequired,
+  refreshControl:PropTypes.element,
+  onRefresh:PropTypes.func.isRequired,
+  tintColor:PropTypes.oneOfType([
+    PropTypes.string
+  ])
+} 

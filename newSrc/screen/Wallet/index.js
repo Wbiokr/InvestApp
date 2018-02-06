@@ -90,7 +90,12 @@ export default class App extends React.Component{
         </View>
 
         <Pull 
-            containerStyle={{backgroundColor:'#333',height:200,}}
+            style={{height:500,}}
+            data={[{key:12},{key:'fdsfsd'},{key:8989}]}
+            renderItem={({item,index})=>{
+              return <View key={index}><Text style={{color:colors.gray3}}>2121212|{item.key}</Text></View>
+            }}
+            ItemSeparatorComponent={()=>{return <View style={{height:2,backgroundColor:'#f00'}}></View>}}
         />
 
         <List containerStyle={{marginTop:0,borderTopWidth:0}}>
