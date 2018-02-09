@@ -67,37 +67,41 @@ export default class App extends React.Component{
           <ActivityIndicator color={colors.blue} size='large' animating={true}  style={{transform:[{scaleX:1.8},{scaleY:1.8}]}}/>
           
         </View>
-        <Pull
-          
-        />
-        <FlatList 
-          contentContainerStyle={styles.content}
-          horizontal={false}
-          keyboardDismissMode='on-drag'
-          keyboardShouldPersistTaps='always'
-          showsVerticalScrollIndicator={true}
-          pagingEnabled={true}
-          scrollEnabled={true}
-          // refreshControl={
-          //   <RefreshControl 
-          //     refreshing={this.state.loadMore}
-          //     onRefresh={()=>{
-          //       this.setState({loadMore:true})
-          //       setTimeout(()=>{this.setState({loadMore:false})},1000)
-          //     }}
-          //     // size='small'
-          //     colors={[colors.green,colors.blue]}
-          //   />
-          // }
+        <Pull 
+          // style={{height:200}}
+          headerStyle={{}}
+          footerStyle={{}}
+          headerTintColor={colors.blue}
+          footerTintColor={colors.red}
           data={this.state.cash}
+          initialNumToRender={3}
+          onEndReachedThreshold={0.5}
           renderItem={this._renderItem}
-          keyExtractor={(item,index)=>index}
           ItemSeparatorComponent={this._renderSep}
-          // ListFooterComponent={this._renderFooter}
-          // ListHeaderComponent={this._renderHeader}
-          {...this.panResponder.panHandlers}
+          // cbScroll={(e)=>{console.log(e)}}
+          // cbBegin={(e)=>{console.log(e);ToastAndroid.show('323233',ToastAndroid.SHORT)}}
+          cbEnd={this.cbEnd.bind(this)}
+          cbLoadingMore={e=>{}}
         />
+        {
+          // <FlatList 
+          //   contentContainerStyle={styles.content}
+          //   horizontal={false}
+          //   keyboardDismissMode='on-drag'
+          //   keyboardShouldPersistTaps='always'
+          //   showsVerticalScrollIndicator={true}
+          //   pagingEnabled={true}
+          //   scrollEnabled={true}
+          //   data={this.state.cash}
+          //   renderItem={this._renderItem}
+          //   keyExtractor={(item,index)=>index}
+          //   ItemSeparatorComponent={this._renderSep}
+          //   // ListFooterComponent={this._renderFooter}
+          //   // ListHeaderComponent={this._renderHeader}
+          //   {...this.panResponder.panHandlers}
+          // />
 
+        }
         <ShowLert {
           ...{
             isShow:this.state.show,
@@ -191,6 +195,10 @@ export default class App extends React.Component{
     
   }
 
+  cbEnd(e,cb){
+    this._getCash.bind(this,cb)
+  }
+
   _backHandle=()=>{
     // if(this.props.navigation.state.routeName!=='Login'){
     //   return false;
@@ -281,11 +289,13 @@ export default class App extends React.Component{
       show:false
     })
   }
-  _getCash=()=>{
-    this.setState({
-      loading:true,
-      show:false,
-    })
+  _getCash=(cb)=>{
+    if(!cb){
+      this.setState({
+        loading:true,
+        show:false,
+      })
+    }
     fetch(investing,{
       method:'POST',
       headers:{
@@ -297,9 +307,10 @@ export default class App extends React.Component{
     })
     .then(res=>res.json())
     .then(res=>{
-        setTimeout(()=>{this.setState({
-          loading:false,
-        })
+        setTimeout(()=>{
+          this.setState({
+            loading:false,
+          })
         if(Number(res.code)===1){
           this.setState({
             cash:res.result
@@ -307,12 +318,17 @@ export default class App extends React.Component{
         }else{
           ToastAndroid.show(res.msg,ToastAndroid.SHORT)
         }
+        if(cb){
+          cb()
+        }
       },1)
       
     })
     .catch(err=>console.log(err))
     .done(()=>{
-      
+      if(cb){
+        cb()
+      }
     })
     
   }

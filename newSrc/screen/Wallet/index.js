@@ -8,6 +8,7 @@ import {
   ScrollView,
   TouchableHighlight,
   TouchableOpacity,
+  ToastAndroid
 } from 'react-native';
 
 import {
@@ -45,7 +46,7 @@ export default class App extends React.Component{
       }
     ]
     return(
-      <ScrollView style={{backgroundColor:colors.gray9}}>
+      <View style={{backgroundColor:colors.gray9,flex:1}}>
         <View style={styles.headerBox}>
           <View style={styles.headerTop}>
             <View >
@@ -90,45 +91,62 @@ export default class App extends React.Component{
         </View>
 
         <Pull 
-            style={{height:500,}}
-            data={[{key:12},{key:'fdsfsd'},{key:8989}]}
+            // isReFreshing={this.state.status}
+            // isLoadingMore={false}
+            style={{height:200}}
+            headerStyle={{}}
+            footerStyle={{}}
+            headerTintColor={colors.blue}
+            footerTintColor={colors.red}
+            data={[{key:12},{key:'fdsfsd'},{key:8989},{key:99999},{key:'fsffffffffff'},{key:8989},{key:99999},{key:'fsffffffffff'}]}
+            initialNumToRender={3}
+            onEndReachedThreshold={5}
             renderItem={({item,index})=>{
-              return <View key={index}><Text style={{color:colors.gray3}}>2121212|{item.key}</Text></View>
+              return <View key={index} style={{}}><Text style={{color:colors.gray3,height:60}}>2121212|{item.key}</Text></View>
             }}
             ItemSeparatorComponent={()=>{return <View style={{height:2,backgroundColor:'#f00'}}></View>}}
+            
+            cbScroll={(e)=>{console.log(e)}}
+            cbBegin={(e)=>{console.log(e);ToastAndroid.show('323233',ToastAndroid.SHORT)}}
+            cbEnd={(e,cb)=>{console.log(e);;ToastAndroid.show('212',ToastAndroid.SHORT);setTimeout(cb,10000)}}
+
+            cbReFreshing={e=>{}}
+            cbLoadingMore={e=>{}}
         />
 
-        <List containerStyle={{marginTop:0,borderTopWidth:0}}>
-          {
-            list.map((item,i)=>{
-              const url=`../../img/wallet/${item.logo}`
-              return <ListItem 
-                key={i}
-                component={TouchableHighlight}
-                activeOpacity={1}
-                underlayColor={colors.gray9}
-                avatar={
-                  <Avatar small rounded source={require('../../img/wallet/zxyh.png')}/>
-                }
-                // containerStyle={{marginTop:90}}
-                // wrapperStyle={{marginTop:0}}
-                title={String(item.name)}
-                rightTitle={String(item.cash)+'元'}
-                // switchButton
-                // hideChevron
-                // onSwitch={()=>{alert(1221)}}
-                // textInput
-                // onPress={()=>{alert(4554)}}
-                onLongPress={()=>{}}
-              />
-            })
-          }
-        </List>
+        {
+        //   <List containerStyle={{marginTop:0,borderTopWidth:0}}>
+        //   {
+        //     list.map((item,i)=>{
+        //       const url=`../../img/wallet/${item.logo}`
+        //       return <ListItem 
+        //         key={i}
+        //         component={TouchableHighlight}
+        //         activeOpacity={1}
+        //         underlayColor={colors.gray9}
+        //         avatar={
+        //           <Avatar small rounded source={require('../../img/wallet/zxyh.png')}/>
+        //         }
+        //         // containerStyle={{marginTop:90}}
+        //         // wrapperStyle={{marginTop:0}}
+        //         title={String(item.name)}
+        //         rightTitle={String(item.cash)+'元'}
+        //         // switchButton
+        //         // hideChevron
+        //         // onSwitch={()=>{alert(1221)}}
+        //         // textInput
+        //         // onPress={()=>{alert(4554)}}
+        //         onLongPress={()=>{}}
+        //       />
+        //     })
+        //   }
+        // </List>
+        }
 
 
         
         
-      </ScrollView>
+      </View>
     )
   }
 }
