@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  TouchableWithoutFeedback,
+  TouchableNativeFeedback,
 } from 'react-native';
 
 import {
@@ -35,9 +37,9 @@ const Right=()=>(
 )
 
 const Title=({title})=>(
-  <View style={{alignSelf:'center'}}>
+  <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('ThemeAttrAndroid',true)} style={{alignSelf:'center'}}>
     <Text style={[styles.arrow,{fontSize:16}]}>{title}</Text>
-  </View>
+  </TouchableNativeFeedback>
 )
 
 export default TabNavigator(
@@ -77,7 +79,7 @@ export default TabNavigator(
     }
   },
   {
-    initialRouteName:'Wallet',
+    initialRouteName:'Home',
     tabBarComponent:TabBarBottom,
     tabBarPosition:'bottom',
     swipeEnabled:true,

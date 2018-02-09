@@ -14,6 +14,7 @@ import {
   ActivityIndicator,
   RefreshControl,
   PanResponder,
+  TouchableNativeFeedback,
   // TouchableWithoutFeedback,
   // fetch,
 } from 'react-native';
@@ -32,6 +33,8 @@ import ShowLert from '../../components/show'
 
 import Pull from '../../components/pull'
 
+import Loading from '../../components/Loading';
+
 const investing=url.investing
 
 export default class App extends React.Component{
@@ -39,7 +42,13 @@ export default class App extends React.Component{
     super(props);
     // this._showMenu=this._showMenu.bind(this);
     this.state={
-      cash:[],
+      cash:[
+        // {name:111},{name:2222},{name:5555},
+        // {name:111},{name:2222},{name:5555},
+        // {name:111},{name:2222},{name:5555},
+        // {name:111},{name:2222},{name:5555},
+        // {name:111},{name:2222},{name:5555},
+      ],
       currentState:AppState.currentState,
       startTime:0,
       loading:true,
@@ -52,6 +61,21 @@ export default class App extends React.Component{
     this._renderItem=this._renderItem.bind(this)
   }
   render(){
+    let content=this.state.loading
+            ?<Loading />
+            :<Pull 
+              ref='pull'
+              headerStyle={{}}
+              footerStyle={{}}
+              headerTintColor={colors.blue}
+              footerTintColor={colors.red}
+              data={this.state.cash}
+              initialNumToRender={3}
+              onEndReachedThreshold={0.5}
+              renderItem={this._renderItem}
+              ItemSeparatorComponent={this._renderSep}
+              cbEnd={(e,cb)=>{this.cbEnd(e,cb)}}
+            />
     return(
       <LinearGradient 
           colors={[colors.gray1,colors.gray9]}
@@ -62,57 +86,11 @@ export default class App extends React.Component{
           <Text style={styles.HeaderTil}>总在投金额</Text>
           <Text style={styles.HeaderCnt}>10000<Text>元</Text></Text>
         </View>  
-        <View style={{flex:1,justifyContent:'center',alignItems:'center',display:this.state.loading?'flex':'none'}}>
-  
-          <ActivityIndicator color={colors.blue} size='large' animating={true}  style={{transform:[{scaleX:1.8},{scaleY:1.8}]}}/>
-          
-        </View>
-        <Pull 
-          // style={{height:200}}
-          headerStyle={{}}
-          footerStyle={{}}
-          headerTintColor={colors.blue}
-          footerTintColor={colors.red}
-          data={this.state.cash}
-          initialNumToRender={3}
-          onEndReachedThreshold={0.5}
-          renderItem={this._renderItem}
-          ItemSeparatorComponent={this._renderSep}
-          // cbScroll={(e)=>{console.log(e)}}
-          // cbBegin={(e)=>{console.log(e);ToastAndroid.show('323233',ToastAndroid.SHORT)}}
-          cbEnd={this.cbEnd.bind(this)}
-          cbLoadingMore={e=>{}}
-        />
+        
         {
-          // <FlatList 
-          //   contentContainerStyle={styles.content}
-          //   horizontal={false}
-          //   keyboardDismissMode='on-drag'
-          //   keyboardShouldPersistTaps='always'
-          //   showsVerticalScrollIndicator={true}
-          //   pagingEnabled={true}
-          //   scrollEnabled={true}
-          //   data={this.state.cash}
-          //   renderItem={this._renderItem}
-          //   keyExtractor={(item,index)=>index}
-          //   ItemSeparatorComponent={this._renderSep}
-          //   // ListFooterComponent={this._renderFooter}
-          //   // ListHeaderComponent={this._renderHeader}
-          //   {...this.panResponder.panHandlers}
-          // />
-
+          content
         }
-        <ShowLert {
-          ...{
-            isShow:this.state.show,
-            x:this.state.x,
-            y:this.state.y,
-            edit:this._edit.bind(this,this.state.item),
-            remove:this._remove.bind(this,this.state.item),
-            reload:this._getCash.bind(this),
-            cancel:this._cancel.bind(this)
-          }
-        } />
+
       </LinearGradient>
     )
   }
@@ -196,7 +174,7 @@ export default class App extends React.Component{
   }
 
   cbEnd(e,cb){
-    this._getCash.bind(this,cb)
+    this._getCash.bind(this)(cb)
   }
 
   _backHandle=()=>{
@@ -228,7 +206,10 @@ export default class App extends React.Component{
     const payload=item;
     
     return(
-      <TouchableOpacity 
+      <TouchableNativeFeedback 
+        background={TouchableNativeFeedback.Ripple('ThemeAttrAndroid',true)}
+        underlayColor='transparent'
+        onPress={()=>{}}
         key={index}
         activeOpacity={0.7}
         delayLongPress={100}
@@ -256,7 +237,7 @@ export default class App extends React.Component{
               </View>
            </View>
         </View>
-      </TouchableOpacity>
+      </TouchableNativeFeedback>
     )
   }
   _renderSep(){
@@ -279,10 +260,8 @@ export default class App extends React.Component{
 
   }
   _edit(item){
-    alert(1112)
   }
   _remove(item){
-    alert(22222222)
   }
   _cancel(){
     this.setState({
@@ -307,28 +286,25 @@ export default class App extends React.Component{
     })
     .then(res=>res.json())
     .then(res=>{
-        setTimeout(()=>{
-          this.setState({
-            loading:false,
-          })
-        if(Number(res.code)===1){
-          this.setState({
-            cash:res.result
-          })
-        }else{
-          ToastAndroid.show(res.msg,ToastAndroid.SHORT)
-        }
-        if(cb){
-          cb()
-        }
-      },1)
+      console.log(res)
+        // setTimeout(()=>{
+            this.setState({
+              loading:false,
+            })
+          if(Number(res.code)===1){
+            this.setState({
+              cash:res.result
+            })
+          }else{
+            ToastAndroid.show(res.msg,ToastAndroid.SHORT)
+          }
+          
+        // },1)
       
     })
     .catch(err=>console.log(err))
     .done(()=>{
-      if(cb){
-        cb()
-      }
+     
     })
     
   }

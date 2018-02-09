@@ -58,6 +58,7 @@ const height1=height-height0;
 export default class Refrest extends React.Component{
   isDraging=false
   isRefreshing=false
+  offset=0
 
   static defaultProps={
     data:[],
@@ -87,11 +88,14 @@ export default class Refrest extends React.Component{
         
         ref='myFlatList'
 
+        
         keyExtractor={(item,index)=>{return String(index)}}//单元素ID值
-
+        
         showsVerticalScrollIndicator={false} //垂直方向是否显示滑动条
         
         {...this.props}
+        
+        style={[{flex:1,paddingBottom:50,},this.props.style]}
         
         ListHeaderComponent={this.renderHeader.bind(this)()}//下拉刷新组件
 
@@ -112,18 +116,21 @@ export default class Refrest extends React.Component{
         onScrollEndDrag={this.scrollEnd.bind(this)}//松手之后回调事件
         
         onMomentumScrollEnd={this.momentumScrollEnd.bind(this)}
+
+        
       />
     )
   }
   componentDidMount(){
-    alert(2121)
-    // setTimeout(()=>{
-    //   alert(10000)
-    //   this.refs.myFlatList.scrollToOffset({
-    //     offset:height,
-    //     animated:false,
-    //   })
-    // },20)
+    setTimeout(()=>{
+      this.scrollToHeight()
+    },50)
+  }
+  scrollToHeight(){
+    this.refs.myFlatList.scrollToOffset({
+      offset:height,
+      animated:false,
+    })
   }
   // 滑动方法
   scroll(e){
@@ -162,17 +169,14 @@ export default class Refrest extends React.Component{
   //开始滑动事件 
   scrollBegin(e){
     this.isDraging=true;
+    this.offset=e.nativeEvent.contentOffset.y;
   }
   //结束滑动
   scrollEnd(e){
     this.isDraging=false;
     let y=e.nativeEvent.contentOffset.y;
-    
-    // if(this.isRefreshing){
-    //   return ;
-    // }else{
+
       if(y<=height1){
-        
         if(this.isRefreshing){
           this.refs.myFlatList.scrollToOffset({
             offset:height1,
@@ -195,11 +199,22 @@ export default class Refrest extends React.Component{
             this.props.cbEnd(e.nativeEvent,this.endRefresh.bind(this))
           }
         }
-  
-        
-        
       }else{
-        this.endRefresh.bind(this)()
+        if(e.nativeEvent.contentOffset.y>height){
+          return ;
+        }
+        if(this.isRefreshing){
+          this.refs.myFlatList.scrollToOffset({
+            offset:height1,
+            animated:true,
+          })
+        }else{
+          
+          this.refs.myFlatList.scrollToOffset({
+            offset:height,
+            animated:true,
+          })
+        }
       } 
 
   }
@@ -303,7 +318,7 @@ const headerStyles=StyleSheet.create({
     height,
     width,
     justifyContent:'flex-end',
-    alignItems:'center'
+    alignItems:'center',
   },
   background:{
     // flex:1,
@@ -311,7 +326,6 @@ const headerStyles=StyleSheet.create({
     height:height0,
     width,
     justifyContent:'center',
-    backgroundColor:colors.white
   },
   status:{
     flexDirection:'row',

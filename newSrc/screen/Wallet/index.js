@@ -90,9 +90,9 @@ export default class App extends React.Component{
           </View>
         </View>
 
-        <Pull 
-            // isReFreshing={this.state.status}
-            // isLoadingMore={false}
+        {
+          <Pull 
+            ref='pull'
             style={{height:200}}
             headerStyle={{}}
             footerStyle={{}}
@@ -108,11 +108,9 @@ export default class App extends React.Component{
             
             cbScroll={(e)=>{console.log(e)}}
             cbBegin={(e)=>{console.log(e);ToastAndroid.show('323233',ToastAndroid.SHORT)}}
-            cbEnd={(e,cb)=>{console.log(e);;ToastAndroid.show('212',ToastAndroid.SHORT);setTimeout(cb,10000)}}
-
-            cbReFreshing={e=>{}}
-            cbLoadingMore={e=>{}}
+            cbEnd={(e,cb)=>{console.log(e);ToastAndroid.show('212',ToastAndroid.SHORT);setTimeout(cb,3000)}}
         />
+        }
 
         {
         //   <List containerStyle={{marginTop:0,borderTopWidth:0}}>
@@ -148,6 +146,11 @@ export default class App extends React.Component{
         
       </View>
     )
+  }
+  componentDidMount(){
+    setTimeout(()=>{
+      this.refs.pull.scrollToHeight()
+    },20)
   }
 }
 
