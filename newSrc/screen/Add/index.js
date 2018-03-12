@@ -87,27 +87,21 @@ export default class Add extends React.Component{
     return(
       <ScrollView >
         {
-          this.state.list.map((item,i)=>(
-            <Fumi 
-              key={i}
-              label={item.label}
-              style={{borderBottomColor:colors.gray1,borderBottomWidth:1,transform:[{scaleY:0.8}],marginTop:-8,backgroundColor:colors.white}}
-              labelStyle={{color:colors.gray7,fontSize:12,margin:0,padding:0}}
-              inputStyle={{color:colors.blue}}
-              iconClass={FontAwesome}
-              iconName={item.iconName}
-              iconColor={colors.orange}
-              iconSize={14}
-              autoFocus={item.key===this.state.key}
-              ref={item.key}
-              onChangeText={(v)=>{
-                this.setState({
-                  [item.key]:v
-                })
+          this.state.list.map((item,index)=>(
+            <TextInput 
+              placeholder={`请输入${item.label}` }
+              key={index}
+              value={item.value||''}
+              onChangeText={value=>{
+                const item=Object.assign({},item,{value})
+                let list=this.state.list;
+                list[index]=item;
+                this.setState({list})
               }}
             />
           ))
         }
+        
         {
           this.state.loading?<Button
               ref='btn2'
@@ -126,11 +120,7 @@ export default class Add extends React.Component{
               onPress={this.addMao}
             />
         }
-        {
-          // <TouchableOpacity style={styles.btnBox} activeOpacity={this.state.opc} onPress={this.addMao}>
-          //   <Text style={[styles.btn,{backgroundColor:this.state.bg}]}>录入平台</Text>
-          // </TouchableOpacity>
-        }
+        
       </ScrollView>
     )
   }
@@ -140,82 +130,17 @@ export default class Add extends React.Component{
     },1000)
   }
   addMao=()=>{
-    // console.log(this.refs)
-    // alert(JSON.stringify(this.state))
-    // console.log(33333333333333333)
-    const name=this.state.name||'';
-    if(!name){
-      ToastAndroid.show('请输入平台！',ToastAndroid.SHORT)
-      // this.refs.name.
-      this.setState({
-        key:'name'
-      })
-      return ;
+    let data={}
+    for(let i=0;i<this.state.list.length;i++){
+      if(this.state.list[i].value==''||this.state.list[i].value==undefined){
+        ToastAndroid.show(`请输入${this.state.list[i]['label']}`,ToastAndroid.SHORT)
+        return ;
+      }
+      console.log(i)
+      data[this.state.list[i]['key']]=this.state.list[i]['value']
     }
-    const cash=this.state.cash||'';
-    if(!cash){
-      ToastAndroid.show('请输入羊毛金额！',ToastAndroid.SHORT)
-      // this.refs.name.
-      this.setState({
-        key:'cash'
-      })
-      return ;
-    }
-    const rateAll=this.state.rateAll||'';
-    if(!rateAll){
-      ToastAndroid.show('请输入总撸金额！',ToastAndroid.SHORT)
-      // this.refs.name.
-      this.setState({
-        key:'rateAll'
-      })
-      return ;
-    }
-    const rateHas=this.state.rateHas||'';
-    if(!rateHas){
-      ToastAndroid.show('请输入已得返利！',ToastAndroid.SHORT)
-      // this.refs.name.
-      this.setState({
-        key:'rateHas'
-      })
-      return ;
-    }
-    const startTime=this.state.startTime||'';
-    if(!startTime){
-      ToastAndroid.show('请输入标的开始时间！',ToastAndroid.SHORT)
-      // this.refs.name.
-      this.setState({
-        key:'startTime'
-      })
-      // return ;
-    }
-    const endTime=this.state.endTime||'';
-    if(!endTime){
-      ToastAndroid.show('请输入标的周期！',ToastAndroid.SHORT)
-      // this.refs.name.
-      this.setState({
-        key:'endTime'
-      })
-      // return ;
-    }
-    const phone=this.state.phone||'';
-    if(!phone){
-      ToastAndroid.show('请输入购买手机尾号！',ToastAndroid.SHORT)
-      // this.refs.name.
-      this.setState({
-        key:'phone'
-      })
-      // return ;
-    }
-    const card=this.state.card||'';
-    if(!card){
-      ToastAndroid.show('请输入购买身份证尾号！',ToastAndroid.SHORT)
-      // this.refs.name.
-      this.setState({
-        key:'card'
-      })
-      // return ;
-    }
-    const body=format({name,cash,rateAll,rateHas,startTime,endTime,phone,card})
+    console.log(data)
+    const body=format(data)
 
 
     fetch(url.insert,{

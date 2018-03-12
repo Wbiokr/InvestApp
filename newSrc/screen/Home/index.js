@@ -21,8 +21,6 @@ import {
 
 import LinearGradient from 'react-native-linear-gradient';
 
-import {PullView} from 'react-native-pull';
-
 import colors from '../../utils/color';
 
 import url from '../../utils/api'
@@ -31,7 +29,8 @@ import format from '../../utils/format';
 
 import ShowLert from '../../components/show'
 
-import Pull from '../../components/pull'
+// import Pull from '../../components/pull'
+import RePull from '../../components/RnPull'
 
 import Loading from '../../components/Loading';
 
@@ -40,41 +39,35 @@ const investing=url.investing
 export default class App extends React.Component{
   constructor(props){
     super(props);
-    // this._showMenu=this._showMenu.bind(this);
+    // this.showMenu=this.showMenu.bind(this);
     this.state={
       cash:[
-        // {name:111},{name:2222},{name:5555},
-        // {name:111},{name:2222},{name:5555},
-        // {name:111},{name:2222},{name:5555},
-        // {name:111},{name:2222},{name:5555},
-        // {name:111},{name:2222},{name:5555},
       ],
       currentState:AppState.currentState,
       startTime:0,
-      loading:true,
+      Loading:true,
+      refreshing:false,
       loadMore:false,
       show:false,
       x:10,
       y:300,
       item:{}
     }
-    this._renderItem=this._renderItem.bind(this)
   }
   render(){
-    let content=this.state.loading
+    let content=this.state.Loading
             ?<Loading />
-            :<Pull 
-              ref='pull'
-              headerStyle={{}}
-              footerStyle={{}}
-              headerTintColor={colors.blue}
-              footerTintColor={colors.red}
+            :<FlatList 
               data={this.state.cash}
-              initialNumToRender={3}
-              onEndReachedThreshold={0.5}
-              renderItem={this._renderItem}
-              ItemSeparatorComponent={this._renderSep}
-              cbEnd={(e,cb)=>{this.cbEnd(e,cb)}}
+              renderItem={this.renderItem.bind(this)}
+              ItemSeparatorComponent={this.renderSep.bind(this)}
+              keyExtractor={(item,index)=>String(index)}
+              refreshControl={
+                <RePull
+                  onRefresh={this.getCash.bind(this)}
+                  refreshing={this.state.refreshing}
+                />
+              }
             />
     return(
       <LinearGradient 
@@ -159,28 +152,22 @@ export default class App extends React.Component{
     })
   }
   componentDidMount(){
-    this._getCash();
-    AppState.addEventListener('change',this._handleChange)
+    this.getCash();
+    AppState.addEventListener('change',this.handleChange)
     if(Platform.OS.toLowerCase()==='android'){
-      BackHandler.addEventListener('hardwareBackPress',this._backHandle)
+      BackHandler.addEventListener('hardwareBackPress',this.backHandle)
     }
   }
   componentWillUnmount(){
     AppState.removeEventListener('change');
     if(Platform.OS.toLowerCase()==='android'){
-      BackHandler.removeEventListener('hardwareBackPress',this._backHandle)
+      BackHandler.removeEventListener('hardwareBackPress',this.backHandle)
     };
     
   }
 
-  cbEnd(e,cb){
-    this._getCash.bind(this)(cb)
-  }
 
-  _backHandle=()=>{
-    // if(this.props.navigation.state.routeName!=='Login'){
-    //   return false;
-    // }
+  backHandle=()=>{
     const nowTime=new Date().getTime();
     if(nowTime-this.state.startTime>2000){
       this.setState({
@@ -192,7 +179,7 @@ export default class App extends React.Component{
     }
     return false;
   }
-  _handleChange=(nextAppState)=>{
+  handleChange=(nextAppState)=>{
     if(this.state.currentState.match(/inactive|background/)&&nextAppState==='active'){
       // alert('进入了')
     }else if(this.state.currentState.match(/active/)&&nextAppState!=='active'){
@@ -202,7 +189,7 @@ export default class App extends React.Component{
     }
   }
   
-  _renderItem({item,index}){
+  renderItem({item,index}){
     const payload=item;
     
     return(
@@ -210,10 +197,9 @@ export default class App extends React.Component{
         background={TouchableNativeFeedback.Ripple('ThemeAttrAndroid',true)}
         underlayColor='transparent'
         onPress={()=>{}}
-        key={index}
         activeOpacity={0.7}
         delayLongPress={100}
-        onLongPress={this._showMenu.bind(this)}
+        onLongPress={this.showMenu.bind(this)}
         
         >
         <View style={styles.itemBox}>
@@ -240,16 +226,16 @@ export default class App extends React.Component{
       </TouchableNativeFeedback>
     )
   }
-  _renderSep(){
+  renderSep(){
     return <View style={{height:10,backgroundColor:'transparent',width:'100%'}}></View>
   }
-  _renderFooter(){
+  renderFooter(){
     return <View style={{paddingVertical:10,borderTopColor:colors.blue,borderTopWidth:0.5}}><Text style={{fontSize:12,color:colors.blue,textAlign:'center'}}>到底了！！！！！！！</Text></View>
   }
-  _renderHeader(){
+  renderHeader(){
     return <View style={{paddingVertical:5,borderBottomColor:colors.blue,borderBottomWidth:0.5}}><Text style={{fontSize:12,color:colors.blue,textAlign:'center'}}>Pull to Refresh</Text></View>
   }
-  _showMenu(e){
+  showMenu(e){
     const x=e.nativeEvent.pageX;
     const y=e.nativeEvent.pageY;
 
@@ -259,22 +245,22 @@ export default class App extends React.Component{
     })
 
   }
-  _edit(item){
+  edit(item){
   }
-  _remove(item){
+  remove(item){
   }
-  _cancel(){
+  cancel(){
     this.setState({
       show:false
     })
   }
-  _getCash=(cb)=>{
-    if(!cb){
-      this.setState({
-        loading:true,
-        show:false,
-      })
+  getCash=(cb)=>{
+    if(this.state.refreshing){
+      return ;
     }
+    this.setState({
+      refreshing:true
+    })
     fetch(investing,{
       method:'POST',
       headers:{
@@ -286,11 +272,7 @@ export default class App extends React.Component{
     })
     .then(res=>res.json())
     .then(res=>{
-      console.log(res)
-        // setTimeout(()=>{
-            this.setState({
-              loading:false,
-            })
+        console.log(res)
           if(Number(res.code)===1){
             this.setState({
               cash:res.result
@@ -298,13 +280,13 @@ export default class App extends React.Component{
           }else{
             ToastAndroid.show(res.msg,ToastAndroid.SHORT)
           }
-          
-        // },1)
-      
     })
     .catch(err=>console.log(err))
     .done(()=>{
-     
+      this.setState({
+        refreshing:false,
+        Loading:false,
+      })
     })
     
   }

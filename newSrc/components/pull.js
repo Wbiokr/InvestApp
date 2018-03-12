@@ -95,7 +95,7 @@ export default class Refrest extends React.Component{
         
         {...this.props}
         
-        style={[{flex:1,paddingBottom:50,},this.props.style]}
+        style={[this.props.style]}
         
         ListHeaderComponent={this.renderHeader.bind(this)()}//下拉刷新组件
 
@@ -319,6 +319,7 @@ const headerStyles=StyleSheet.create({
     width,
     justifyContent:'flex-end',
     alignItems:'center',
+    backgroundColor:'#ff0'
   },
   background:{
     // flex:1,
