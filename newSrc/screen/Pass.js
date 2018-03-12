@@ -26,7 +26,7 @@ export default class MyPass extends React.Component{
     return(
       <Password 
       
-        ref='ps'
+        // ref='ps'
         status={this.state.status}
         message={this.state.msg}
         onStart={this._start}

@@ -103,7 +103,7 @@ export default class Refrest extends React.Component{
         
         scrollEnabled={true}
 
-        scrollEventThrottle={16} //表示滚动过程中，scroll事件被调用的频率
+        scrollEventThrottle={160} //表示滚动过程中，scroll事件被调用的频率
         
         onEndReached={this.props.onEndReached}//加载更多回调事件
         

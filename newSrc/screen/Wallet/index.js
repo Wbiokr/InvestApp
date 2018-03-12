@@ -173,14 +173,7 @@ const styles=StyleSheet.create({
     borderRadius:28,
     overflow:'hidden',
   },
-  // photoBox:{
-  //   // height:60,
-  //   // width:60,
-  //   backgroundColor:colors.gray8,
-  //   // borderRadius:31,
-  //   overflow:'hidden',
-  //   padding:2
-  // },
+
   headerTxt:{
     color:colors.gray8,
     fontSize:14,

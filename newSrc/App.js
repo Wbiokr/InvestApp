@@ -31,12 +31,6 @@ export default StackNavigator(
       //   headerTitle:'主要页面'
       // }
     },
-    // Pass:{
-    //   screen:Pass,
-    //   navigationOptions:{
-    //     header:null
-    //   }
-    // }
   },
   {
     initialRouteName:'Login',

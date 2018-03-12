@@ -117,7 +117,7 @@ export default class Add extends React.Component{
               backgroundColor={colors.blue}
             />:
             <Button
-              ref='btn'
+              // ref='btn'
               title='提交'
               raised
               backgroundColor={colors.blue}
@@ -140,7 +140,7 @@ export default class Add extends React.Component{
     },1000)
   }
   addMao=()=>{
-    console.log(this.refs)
+    // console.log(this.refs)
     // alert(JSON.stringify(this.state))
     // console.log(33333333333333333)
     const name=this.state.name||'';
