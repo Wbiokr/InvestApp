@@ -85,10 +85,11 @@ export default class Add extends React.Component{
   }
   render(){
     return(
-      <ScrollView >
+      <ScrollView style={{paddingTop:5,paddingBottom:50,paddingHorizontal:20}}>
         {
           this.state.list.map((item,index)=>(
             <TextInput 
+              style={styles.input}
               placeholder={`请输入${item.label}` }
               key={index}
               value={item.value||''}
@@ -169,6 +170,9 @@ const styles=StyleSheet.create({
   btnBox:{
     marginVertical:20,
     marginHorizontal:10,
+  },
+  input:{
+    paddingLeft:10,
   },
   btn:{
     // flex:1,
