@@ -79,7 +79,7 @@ export default TabNavigator(
     }
   },
   {
-    initialRouteName:'Home',
+    initialRouteName:'Add',
     tabBarComponent:TabBarBottom,
     tabBarPosition:'bottom',
     swipeEnabled:true,

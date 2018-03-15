@@ -87,6 +87,12 @@ export default class App extends React.Component{
       </LinearGradient>
     )
   }
+  componentDidUpdate(){
+    // if(this.props.navigation.state.params&&this.props.navigation.state.params.type==='update'){
+    //   // this.setState({Loading:true});
+    //   // this.getCash()
+    // }
+  }
   componentWillMount(){
     this.panResponder=PanResponder.create({
       //要求成为响应者,返回布尔值true表示愿意成为响应者
@@ -152,6 +158,7 @@ export default class App extends React.Component{
     })
   }
   componentDidMount(){
+    
     this.getCash();
     AppState.addEventListener('change',this.handleChange)
     if(Platform.OS.toLowerCase()==='android'){
