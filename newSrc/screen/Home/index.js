@@ -285,6 +285,9 @@ export default class App extends React.Component{
               cash:res.result
             })
           }else{
+            this.setState({
+              cash:[]
+            })
             ToastAndroid.show(res.msg,ToastAndroid.SHORT)
           }
     })

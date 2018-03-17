@@ -52,9 +52,9 @@ export default class Add extends React.Component {
         { txt: '13186962939' },
       ],
 
-      idList:[
-        {txt:'身份证8733'},
-        {txt:'身份证5728'},
+      idList: [
+        { txt: '身份证8733' },
+        { txt: '身份证5728' },
       ],
 
       list: [
@@ -130,12 +130,11 @@ export default class Add extends React.Component {
         <ScrollView style={{ paddingTop: 5, paddingBottom: 50, paddingHorizontal: 20 }}>
           {
             this.state.list.map((item, index) => (
-              item.key === 'startTime' ?
-                <View style={styles.container} key={item.key}>
-                  {
-                    item.key === 'startTime'
-                  }
-                  <Text
+              // item.key === 'startTime' ?
+              <View style={styles.container} key={item.key}>
+                {
+                  item.key === ('startTime' || 'phone' || 'card') ? 
+                    <Text
                     onPress={
                       () => {
                         this.SelectDate(item, index)
@@ -150,53 +149,53 @@ export default class Add extends React.Component {
                       // backgroundColor:'#f00',
                       zIndex: 100,
 
-                    }}></Text>
-                  <AnimatedLabel
-                    ref={item.key}
-                    style={styles.label}
-                  >
-                    {item.label}
-                  </AnimatedLabel>
-                  <TextInput
-                    style={styles.input}
-                    placeholder={`请输入${item.label}`}
-                    value={item.value || ''}
-                    underlineColorAndroid='transparent'
-                    keyboardType={item.keyboardType || 'default'}
-                    editable={true}
-                  />
-                </View> : <View style={styles.container} key={item.key}>
-                  <AnimatedLabel
-                    ref={item.key}
-                    style={styles.label}
-                  >
-                    {item.label}
-                  </AnimatedLabel>
-                  <TextInput
-                    onFocus={() => {
-                      this.refs[item.key].focus()
-                    }}
-                    onBlur={() => {
-                      if (item.value !== '') {
-                        return;
-                      }
-                      this.refs[item.key].blur()
-                    }}
-                    style={styles.input}
-                    placeholder={`请输入${item.label}`}
-                    value={item.value || ''}
-                    underlineColorAndroid='transparent'
-                    clearButtonMode='always'
-                    blurOnSubmit={true}
-                    keyboardType={item.keyboardType || 'default'}
-                    onChangeText={value => {
-                      const newItem = Object.assign({}, item, { value })
-                      let list = this.state.list;
-                      list[index] = newItem;
-                      this.setState({ list })
-                    }}
-                  />
-                </View>
+                    }}></Text> 
+                    : null
+                }
+
+                <AnimatedLabel
+                  ref={item.key}
+                  style={styles.label}
+                >
+                  {item.label}
+                </AnimatedLabel>
+                {
+                  item.key === ('startTime' || 'phone' || 'card')
+                    ? <TextInput
+                      style={styles.input}
+                      placeholder={`请输入${item.label}`}
+                      value={item.value || ''}
+                      underlineColorAndroid='transparent'
+                      keyboardType={item.keyboardType || 'default'}
+                      editable={true}
+                    />
+                    : <TextInput
+                      onFocus={() => {
+                        this.refs[item.key].focus()
+                      }}
+                      onBlur={() => {
+                        if (item.value !== '') {
+                          return;
+                        }
+                        this.refs[item.key].blur()
+                      }}
+                      style={styles.input}
+                      placeholder={`请输入${item.label}`}
+                      value={item.value || ''}
+                      underlineColorAndroid='transparent'
+                      clearButtonMode='always'
+                      blurOnSubmit={true}
+                      keyboardType={item.keyboardType || 'default'}
+                      onChangeText={value => {
+                        const newItem = Object.assign({}, item, { value })
+                        let list = this.state.list;
+                        list[index] = newItem;
+                        this.setState({ list })
+                      }}
+                    />
+                }
+
+              </View>
             ))
           }
 
@@ -223,7 +222,7 @@ export default class Add extends React.Component {
         </ScrollView>
 
         {
-          this.state.alt?null:<Radio list={this.state.altList||[]} />
+          this.state.alt ?  <Radio list={this.state.altList || []} /> : null
         }
 
       </View>
