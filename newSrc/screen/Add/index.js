@@ -47,14 +47,16 @@ export default class Add extends React.Component {
       // opc:1,
       // bg:colors.gray4,
       key: '',
+      alt:false,
+      altIndex:'',
       phoneList: [
         { txt: '15138678960' },
         { txt: '13186962939' },
       ],
 
-      idList:[
-        {txt:'身份证8733'},
-        {txt:'身份证5728'},
+      idList: [
+        { txt: '身份证8733' },
+        { txt: '身份证5728' },
       ],
 
       list: [
@@ -130,15 +132,28 @@ export default class Add extends React.Component {
         <ScrollView style={{ paddingTop: 5, paddingBottom: 50, paddingHorizontal: 20 }}>
           {
             this.state.list.map((item, index) => (
-              item.key === 'startTime' ?
-                <View style={styles.container} key={item.key}>
-                  {
-                    item.key === 'startTime'
-                  }
-                  <Text
+              // item.key === 'startTime' ?
+              <View style={styles.container} key={item.key}>
+                {
+                  'startTimephonecard'.includes(item.key ) ? 
+                    <Text
                     onPress={
                       () => {
-                        this.SelectDate(item, index)
+                        if(item.key==='phone'){
+                          this.setState({
+                            alt:true,
+                            altIndex:index,
+                            altList:this.state.phoneList
+                          })
+                        }else if(item.key==='card'){
+                          this.setState({
+                            alt:true,
+                            altIndex:index,
+                            altList:this.state.idList
+                          })
+                        }else{
+                          this.SelectDate(item, index)
+                        }
                       }
                     }
                     style={{
@@ -150,53 +165,68 @@ export default class Add extends React.Component {
                       // backgroundColor:'#f00',
                       zIndex: 100,
 
-                    }}></Text>
-                  <AnimatedLabel
-                    ref={item.key}
-                    style={styles.label}
-                  >
-                    {item.label}
-                  </AnimatedLabel>
-                  <TextInput
-                    style={styles.input}
-                    placeholder={`请输入${item.label}`}
-                    value={item.value || ''}
-                    underlineColorAndroid='transparent'
-                    keyboardType={item.keyboardType || 'default'}
-                    editable={true}
-                  />
-                </View> : <View style={styles.container} key={item.key}>
-                  <AnimatedLabel
-                    ref={item.key}
-                    style={styles.label}
-                  >
-                    {item.label}
-                  </AnimatedLabel>
-                  <TextInput
-                    onFocus={() => {
-                      this.refs[item.key].focus()
-                    }}
-                    onBlur={() => {
-                      if (item.value !== '') {
-                        return;
-                      }
-                      this.refs[item.key].blur()
-                    }}
-                    style={styles.input}
-                    placeholder={`请输入${item.label}`}
-                    value={item.value || ''}
-                    underlineColorAndroid='transparent'
-                    clearButtonMode='always'
-                    blurOnSubmit={true}
-                    keyboardType={item.keyboardType || 'default'}
-                    onChangeText={value => {
-                      const newItem = Object.assign({}, item, { value })
-                      let list = this.state.list;
-                      list[index] = newItem;
-                      this.setState({ list })
-                    }}
-                  />
-                </View>
+                    }}></Text> 
+                    : null
+                }
+
+                <AnimatedLabel
+                  ref={item.key}
+                  style={styles.label}
+                >
+                  {item.label}
+                </AnimatedLabel>
+                {
+                  'startTimephonecard'.includes(item.key ) 
+                  // item.key === ('startTime' || 'phone' || 'card')
+                    ? <TextInput
+                      style={styles.input}
+                      placeholder={`请输入${item.label}`}
+                      value={item.value || ''}
+                      underlineColorAndroid='transparent'
+                      keyboardType={item.keyboardType || 'default'}
+                      caretHidden={true}
+                      editable={true}
+                      // onChangeText={value=>{
+                      //   alert(value,111)
+                      //   if(value!==''){
+                      //     alert(value)
+                      //     this.refs[item.key].focus()
+                      //   }else{
+                      //     this.refs[item.key].blur()
+                      //   }
+                      //   const newItem = Object.assign({}, item, { value })
+                      //   let list = this.state.list;
+                      //   list[index] = newItem;
+                      //   this.setState({ list });
+                      // }}
+                    />
+                    : <TextInput
+                      onFocus={() => {
+                        this.refs[item.key].focus()
+                      }}
+                      onBlur={() => {
+                        if (item.value !== '') {
+                          return;
+                        }
+                        this.refs[item.key].blur()
+                      }}
+                      style={styles.input}
+                      placeholder={`请输入${item.label}`}
+                      value={item.value || ''}
+                      underlineColorAndroid='transparent'
+                      clearButtonMode='always'
+                      blurOnSubmit={true}
+                      keyboardType={item.keyboardType || 'default'}
+                      onChangeText={value => {
+                        const newItem = Object.assign({}, item, { value })
+                        let list = this.state.list;
+                        list[index] = newItem;
+                        this.setState({ list })
+                      }}
+                    />
+                }
+
+              </View>
             ))
           }
 
@@ -223,13 +253,23 @@ export default class Add extends React.Component {
         </ScrollView>
 
         {
-          this.state.alt?null:<Radio list={this.state.altList||[]} />
+          this.state.alt ?  <Radio list={this.state.altList || []} cb={this.cbSelect.bind(this)} /> : null
         }
 
       </View>
     )
   }
   componentDidMount() {
+  }
+  cbSelect(i){
+
+    const newItem=Object.assign({},this.state.list[this.state.altIndex],{value:this.state.altList[i]['txt']});
+    let list=this.state.list
+
+    this.refs[newItem.key].focus()
+
+    list[this.state.altIndex]=newItem;
+    this.setState({list,alt:false})
   }
   async SelectDate(item, index) {
 
@@ -277,6 +317,9 @@ export default class Add extends React.Component {
         return;
       }
       data[this.state.list[i]['key']] = this.state.list[i]['value']
+      if(this.state.list[i]['key']==='card'){
+        data[this.state.list[i]['key']] = this.state.list[i]['value'].slice(3)
+      }
     }
 
     this.setState({ loading: true })

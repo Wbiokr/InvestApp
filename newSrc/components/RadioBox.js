@@ -66,6 +66,7 @@ export default class RadioBox extends React.Component {
     )
   }
   componentDidMount() {
+    this.animate(1)
   }
   animate(v){
     Animated.timing(
@@ -78,6 +79,10 @@ export default class RadioBox extends React.Component {
   }
   changeIndex(index){
     this.setState({index})
+    setTimeout(()=>{
+      this.animate(0)
+      this.props.cb(index)
+    },200)
   }
 }
 
