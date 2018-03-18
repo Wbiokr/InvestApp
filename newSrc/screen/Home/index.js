@@ -53,7 +53,7 @@ export default class App extends React.Component{
       y:300,
       item:{},
       page:1,
-      pageSize:10,
+      size:10,
       isLoadMore:false,
     }
     this.getCash=this.getCash.bind(this)
@@ -324,7 +324,7 @@ export default class App extends React.Component{
       },
       body:format({
         page:this.state.page,
-        pageSize:this.state.pageSize,
+        size:this.state.size,
       })
     })
     .then(res=>res.json())
