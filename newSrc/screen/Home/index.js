@@ -51,8 +51,12 @@ export default class App extends React.Component{
       show:false,
       x:10,
       y:300,
-      item:{}
+      item:{},
+      page:1,
+      pageSize:10,
+      isLoadMore:false,
     }
+    this.getCash=this.getCash.bind(this)
   }
   render(){
     let content=this.state.Loading
@@ -64,10 +68,16 @@ export default class App extends React.Component{
               keyExtractor={(item,index)=>String(index)}
               refreshControl={
                 <RePull
-                  onRefresh={this.getCash.bind(this)}
+                  onRefresh={()=>{
+
+                    this.refresh.bind(this)()
+
+                  }}
                   refreshing={this.state.refreshing}
                 />
               }
+              onEndReached={this.loadMore.bind(this)}
+              onEndReachedThreshold={0.1}
             />
     return(
       <LinearGradient 
@@ -159,7 +169,7 @@ export default class App extends React.Component{
   }
   componentDidMount(){
     
-    this.getCash();
+    this.refresh();
     AppState.addEventListener('change',this.handleChange)
     if(Platform.OS.toLowerCase()==='android'){
       BackHandler.addEventListener('hardwareBackPress',this.backHandle)
@@ -201,7 +211,7 @@ export default class App extends React.Component{
     
     return(
       <TouchableNativeFeedback 
-        background={TouchableNativeFeedback.Ripple('ThemeAttrAndroid',true)}
+        background={TouchableNativeFeedback.SelectableBackground()}
         underlayColor='transparent'
         onPress={()=>{}}
         activeOpacity={0.7}
@@ -261,42 +271,89 @@ export default class App extends React.Component{
       show:false
     })
   }
-  getCash=(cb)=>{
-    if(this.state.refreshing){
-      return ;
-    }
-    this.setState({
-      refreshing:true
-    })
+  loadMore(){
+    // this.setState({isLoadMore:true})
+    this.getCash(
+      ()=>{
+        alert(1111)
+        if(this.state.refreshing||this.state.isLoadMore){
+          return ;
+        }
+        this.setState({
+          page:this.state.page+1,
+          isLoadMore:true
+        })
+      },
+      (res)=>{
+        if(Number(res.code)===1){
+          this.setState({
+            cash:this.state.cash.concat(res.result)
+          })
+        }
+      }
+    )
+  }
+  refresh(){
+    this.getCash.bind(this)(
+      ()=>{
+        if(this.state.refreshing||this.state.isLoadMore){
+          return ;
+        }
+        this.setState({
+          page:1,
+          refreshing:true
+        })
+      },
+      (res)=>{
+        if(Number(res.code)===1){
+          this.setState({
+            cash:res.result
+          })
+        }
+      }
+    )
+  }
+  getCash=(cbBefore,cbAfter)=>{
+
+    cbBefore&&cbBefore()
+    
     fetch(investing,{
       method:'POST',
       headers:{
         "Content-Type":'application/x-www-form-urlencoded',
       },
       body:format({
-        page:1,
+        page:this.state.page,
+        pageSize:this.state.pageSize,
       })
     })
     .then(res=>res.json())
     .then(res=>{
-        console.log(res)
-          if(Number(res.code)===1){
-            this.setState({
-              cash:res.result
-            })
-          }else{
-            this.setState({
-              cash:[]
-            })
-            ToastAndroid.show(res.msg,ToastAndroid.SHORT)
-          }
+
+        cbAfter&&cbAfter(res)
+          // if(Number(res.code)===1){
+          //   this.setState({
+          //     cash:this.state.page==1?res.result:this.state.cash.concat(res.result),
+          //     page:++this.state.page,
+          //   })
+          // }else{
+          //   if(!this.state.isLoadMore){
+          //     this.setState({
+          //       cash:[],
+          //     })
+          //   }
+          //   ToastAndroid.show(res.msg,ToastAndroid.SHORT)
+          // }
     })
     .catch(err=>console.log(err))
     .done(()=>{
-      this.setState({
-        refreshing:false,
-        Loading:false,
-      })
+      setTimeout(()=>{
+        this.setState({
+          refreshing:false,
+          Loading:false,
+          isLoadMore:false,
+        })
+      },300)
     })
     
   }
@@ -306,7 +363,7 @@ export default class App extends React.Component{
 
 const styles=StyleSheet.create({
   HeaderBox:{
-    height:130,
+    height:80,
     flexDirection:'column',
     justifyContent:'center',
     alignItems:'center',

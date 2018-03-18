@@ -177,7 +177,6 @@ export default class Add extends React.Component {
                 </AnimatedLabel>
                 {
                   'startTimephonecard'.includes(item.key ) 
-                  // item.key === ('startTime' || 'phone' || 'card')
                     ? <TextInput
                       style={styles.input}
                       placeholder={`请输入${item.label}`}
@@ -186,19 +185,6 @@ export default class Add extends React.Component {
                       keyboardType={item.keyboardType || 'default'}
                       caretHidden={true}
                       editable={true}
-                      // onChangeText={value=>{
-                      //   alert(value,111)
-                      //   if(value!==''){
-                      //     alert(value)
-                      //     this.refs[item.key].focus()
-                      //   }else{
-                      //     this.refs[item.key].blur()
-                      //   }
-                      //   const newItem = Object.assign({}, item, { value })
-                      //   let list = this.state.list;
-                      //   list[index] = newItem;
-                      //   this.setState({ list });
-                      // }}
                     />
                     : <TextInput
                       onFocus={() => {
