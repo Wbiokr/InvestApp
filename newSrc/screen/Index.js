@@ -37,8 +37,8 @@ const Right=()=>(
 )
 
 const Title=({title})=>(
-  <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('ThemeAttrAndroid',true)} style={{alignSelf:'center'}}>
-    <Text style={[styles.arrow,{fontSize:16}]}>{title}</Text>
+  <TouchableNativeFeedback background={TouchableNativeFeedback.SelectableBackground()} style={{alignSelf:'center'}}>
+    <Text style={[styles.arrow,{fontSize:12}]}>{title}</Text>
   </TouchableNativeFeedback>
 )
 
@@ -49,7 +49,7 @@ export default TabNavigator(
       path:'/index/home',
       navigationOptions:{
         tabBarIcon:({tintColor})=>(
-            <Image resizeMode='contain' source={require('../img/icon/home.png')} style={[styles.icon,{tintColor:tintColor}]} />
+          <Image resizeMode='contain' source={require('../img/icon/home.png')} style={[styles.icon,{tintColor:tintColor}]} />
         ),
         headerTitle:<Title title='在投羊毛' />,
         

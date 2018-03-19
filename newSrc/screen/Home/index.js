@@ -34,7 +34,7 @@ import RePull from '../../components/RnPull'
 
 import Loading from '../../components/Loading';
 
-const investing=url.investing
+const investing=url.record
 
 export default class App extends React.Component{
   constructor(props){
@@ -49,8 +49,8 @@ export default class App extends React.Component{
       refreshing:false,
       loadMore:false,
       show:false,
-      x:10,
-      y:300,
+      // x:10,
+      // y:300,
       item:{},
       page:1,
       size:10,
@@ -84,11 +84,26 @@ export default class App extends React.Component{
           colors={[colors.gray1,colors.gray9]}
           style={{flex:1}}
         >
+        <TouchableNativeFeedback>
+          <View style={styles.HeaderBox} >
+          
+            <View style={styles.HeaderItem}>
+              <Text style={styles.HeaderCnt}>{this.state.totalAdd||'--'}<Text style={{fontSize:10}}>&lt;{this.state.totalMonth||'--'}&gt;</Text></Text>
+              <Text style={styles.HeaderTil}>累计本金<Text style={{fontSize:8}}>&lt;在投&gt;</Text></Text>
+            </View>
 
-        <View style={styles.HeaderBox} >
-          <Text style={styles.HeaderTil}>总在投金额</Text>
-          <Text style={styles.HeaderCnt}>10000<Text>元</Text></Text>
-        </View>  
+            <View style={styles.HeaderItem}>
+              <Text style={styles.HeaderCnt}>{this.state.allEarn||'--'}<Text style={{fontSize:10}}>&lt;{this.state.monthEarn||'--'}&gt;</Text></Text>
+              <Text style={styles.HeaderTil}>累计撸毛<Text style={{fontSize:8}}>&lt;本月&gt;</Text></Text>
+            </View>
+
+            <View style={styles.HeaderItem}>
+              <Text style={styles.HeaderCnt}>{this.state.redBag||'--'}<Text style={{fontSize:10}}>&lt;{this.state.rate||'--'}&gt;</Text></Text>
+              <Text style={styles.HeaderTil}>已返红包<Text style={{fontSize:8}}>&lt;代收利息&gt;</Text></Text>
+            </View>
+            
+          </View>  
+        </TouchableNativeFeedback>
         
         {
           content
@@ -210,14 +225,14 @@ export default class App extends React.Component{
     const payload=item;
     
     return(
-      <TouchableNativeFeedback 
-        background={TouchableNativeFeedback.SelectableBackground()}
-        underlayColor='transparent'
-        onPress={()=>{}}
-        activeOpacity={0.7}
-        delayLongPress={100}
+      <TouchableOpacity 
+        // background={TouchableNativeFeedback.SelectableBackground()}
+        // underlayColor='transparent'
+        // onPress={()=>{}}
+        // activeOpacity={0.7}
+        // delayLongPress={100}
         onLongPress={this.showMenu.bind(this)}
-        
+         activeOpacity={0.7}
         >
         <View style={styles.itemBox}>
            <View style={styles.itemTitle }>
@@ -240,7 +255,7 @@ export default class App extends React.Component{
               </View>
            </View>
         </View>
-      </TouchableNativeFeedback>
+      </TouchableOpacity>
     )
   }
   renderSep(){
@@ -253,13 +268,14 @@ export default class App extends React.Component{
     return <View style={{paddingVertical:5,borderBottomColor:colors.blue,borderBottomWidth:0.5}}><Text style={{fontSize:12,color:colors.blue,textAlign:'center'}}>Pull to Refresh</Text></View>
   }
   showMenu(e){
-    const x=e.nativeEvent.pageX;
-    const y=e.nativeEvent.pageY;
 
-    this.setState({
-      x,y,
-      show:true
-    })
+    // const x=e.nativeEvent.pageX;
+    // const y=e.nativeEvent.pageY;
+
+    // this.setState({
+    //   x,y,
+    //   show:true
+    // })
 
   }
   edit(item){
@@ -272,10 +288,8 @@ export default class App extends React.Component{
     })
   }
   loadMore(){
-    // this.setState({isLoadMore:true})
     this.getCash(
       ()=>{
-        alert(1111)
         if(this.state.refreshing||this.state.isLoadMore){
           return ;
         }
@@ -329,21 +343,7 @@ export default class App extends React.Component{
     })
     .then(res=>res.json())
     .then(res=>{
-
         cbAfter&&cbAfter(res)
-          // if(Number(res.code)===1){
-          //   this.setState({
-          //     cash:this.state.page==1?res.result:this.state.cash.concat(res.result),
-          //     page:++this.state.page,
-          //   })
-          // }else{
-          //   if(!this.state.isLoadMore){
-          //     this.setState({
-          //       cash:[],
-          //     })
-          //   }
-          //   ToastAndroid.show(res.msg,ToastAndroid.SHORT)
-          // }
     })
     .catch(err=>console.log(err))
     .done(()=>{
@@ -364,20 +364,26 @@ export default class App extends React.Component{
 const styles=StyleSheet.create({
   HeaderBox:{
     height:80,
-    flexDirection:'column',
-    justifyContent:'center',
+    flexDirection:'row',
+    justifyContent:'space-around',
     alignItems:'center',
     // paddingBottom:20,
     borderBottomColor:colors.gray4,
     borderBottomWidth:1,
     backgroundColor:colors.blue
   },
+  HeaderItem:{
+    // flex:1
+    flexDirection:'column',
+  },
   HeaderTil:{
-    fontSize:30,
+    fontSize:12,
     color:colors.white,
+    textAlign:'center'
   },
   HeaderCnt:{
-    fontSize:24,
+    textAlign:'center',
+    fontSize:18,
     color:colors.white
   },
   content:{

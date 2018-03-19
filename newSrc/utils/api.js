@@ -1,6 +1,6 @@
-const env='pro'
+const env='dev'
 
-const agree=env==='dev'?'http://192.168.173.2:18080/':'http://wbiokr.duapp.com/';
+const agree=env==='dev'?'http://192.168.1.101:18080/':'http://wbiokr.duapp.com/';
 
 export default {
   agree,
@@ -9,9 +9,9 @@ export default {
 
   regist:`${agree}regist`,
   
-  investing:`${agree}investing`,
+  record:`${agree}invest/record`,
 
-  invested:`${agree}invested`,
+  // invested:`${agree}invest/`,
 
-  insert:`${agree}insert`,
+  edit:`${agree}invest/edit`,
 }
