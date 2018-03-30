@@ -76,8 +76,8 @@ export default class App extends React.Component{
                   refreshing={this.state.refreshing}
                 />
               }
-              onEndReached={this.loadMore.bind(this)}
-              onEndReachedThreshold={0.1}
+              // onEndReached={this.loadMore.bind(this)}
+              // onEndReachedThreshold={0.1}
             />
     return(
       <LinearGradient 

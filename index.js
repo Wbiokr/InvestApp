@@ -1,7 +1,7 @@
 import { AppRegistry,Platform,UIManager } from 'react-native';
 
 
-import App from './newSrc/App';
+import App from './src/App';
 
 
 if(Platform.OS.toLowerCase()==='android'){
