@@ -47,8 +47,8 @@ export default class Add extends React.Component {
       // opc:1,
       // bg:colors.gray4,
       key: '',
-      alt:false,
-      altIndex:'',
+      alt: false,
+      altIndex: '',
       phoneList: [
         { txt: '15138678960' },
         { txt: '13186962939' },
@@ -135,37 +135,37 @@ export default class Add extends React.Component {
               // item.key === 'startTime' ?
               <View style={styles.container} key={item.key}>
                 {
-                  'startTimephonecard'.includes(item.key ) ? 
+                  'startTimephonecard'.includes(item.key) ?
                     <Text
-                    onPress={
-                      () => {
-                        if(item.key==='phone'){
-                          this.setState({
-                            alt:true,
-                            altIndex:index,
-                            altList:this.state.phoneList
-                          })
-                        }else if(item.key==='card'){
-                          this.setState({
-                            alt:true,
-                            altIndex:index,
-                            altList:this.state.idList
-                          })
-                        }else{
-                          this.SelectDate(item, index)
+                      onPress={
+                        () => {
+                          if (item.key === 'phone') {
+                            this.setState({
+                              alt: true,
+                              altIndex: index,
+                              altList: this.state.phoneList
+                            })
+                          } else if (item.key === 'card') {
+                            this.setState({
+                              alt: true,
+                              altIndex: index,
+                              altList: this.state.idList
+                            })
+                          } else {
+                            this.SelectDate(item, index)
+                          }
                         }
                       }
-                    }
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      height: '100%',
-                      // backgroundColor:'#f00',
-                      zIndex: 100,
+                      style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        // backgroundColor:'#f00',
+                        zIndex: 100,
 
-                    }}></Text> 
+                      }}></Text>
                     : null
                 }
 
@@ -176,7 +176,7 @@ export default class Add extends React.Component {
                   {item.label}
                 </AnimatedLabel>
                 {
-                  'startTimephonecard'.includes(item.key ) 
+                  'startTimephonecard'.includes(item.key)
                     ? <TextInput
                       style={styles.input}
                       placeholder={`请输入${item.label}`}
@@ -239,7 +239,7 @@ export default class Add extends React.Component {
         </ScrollView>
 
         {
-          this.state.alt ?  <Radio list={this.state.altList || []} cb={this.cbSelect.bind(this)} /> : null
+          this.state.alt ? <Radio list={this.state.altList || []} cb={this.cbSelect.bind(this)} /> : null
         }
 
       </View>
@@ -247,15 +247,15 @@ export default class Add extends React.Component {
   }
   componentDidMount() {
   }
-  cbSelect(i){
+  cbSelect(i) {
 
-    const newItem=Object.assign({},this.state.list[this.state.altIndex],{value:this.state.altList[i]['txt']});
-    let list=this.state.list
+    const newItem = Object.assign({}, this.state.list[this.state.altIndex], { value: this.state.altList[i]['txt'] });
+    let list = this.state.list
 
     this.refs[newItem.key].focus()
 
-    list[this.state.altIndex]=newItem;
-    this.setState({list,alt:false})
+    list[this.state.altIndex] = newItem;
+    this.setState({ list, alt: false })
   }
   async SelectDate(item, index) {
 
@@ -295,22 +295,23 @@ export default class Add extends React.Component {
 
     return `${year}-${month}-0${day}`
   }
-  addMao = (obj={}) => {
-    let data = {}
-    for (let i = 0; i < this.state.list.length; i++) {
-      if (this.state.list[i].value == '' || this.state.list[i].value == undefined) {
-        ToastAndroid.show(`请输入${this.state.list[i]['label']}`, ToastAndroid.SHORT)
-        return;
-      }
-      data[this.state.list[i]['key']] = this.state.list[i]['value']
-      if(this.state.list[i]['key']==='card'){
-        data[this.state.list[i]['key']] = this.state.list[i]['value'].slice(3)
-      }
-    }
+  addMao = (isUpdate=false) => {
+    let data = isUpdate?{isUpdate}:{isUpdate:false}
+    
+    // for (let i = 0; i < this.state.list.length; i++) {
+    //   if (this.state.list[i].value == '' || this.state.list[i].value == undefined) {
+    //     ToastAndroid.show(`请输入${this.state.list[i]['label']}`, ToastAndroid.SHORT)
+    //     return;
+    //   }
+    //   data[this.state.list[i]['key']] = this.state.list[i]['value']
+    //   if (this.state.list[i]['key'] === 'card') {
+    //     data[this.state.list[i]['key']] = this.state.list[i]['value'].slice(3)
+    //   }
+    // }
 
     this.setState({ loading: true })
 
-    const body = format(Object.assign({},data,obj))
+    const body = format(data)
 
 
     fetch(url.insert, {
@@ -337,16 +338,17 @@ export default class Add extends React.Component {
           )
         } else if (status === 0) {
           // 失败
-          ToastAndroid.show(res.msg,ToastAndroid.SHORT)
-        }else if(status===-1){
+          ToastAndroid.show(res.msg, ToastAndroid.SHORT)
+        } else if (status === -1) {
+          alert('23')
           Alert.alert(
             'sorry，',
             res.msg,
             [
-              {text:'修改数据',onPress:()=>{this.addMao({isUpdate:true})}},
-              {text:'取消',onPress:()=>{ToastAndroid.show('您已取消',ToastAndroid.SHORT)}},
+              { text: '修改数据', onPress: () => {  this.addMao(true) } },
+              { text: '取消', onPress: () => { ToastAndroid.show('您已取消', ToastAndroid.SHORT) } },
             ],
-            {cancelable:true}
+            { cancelable: false }
           )
         }
       })
