@@ -295,8 +295,8 @@ export default class Add extends React.Component {
 
     return `${year}-${month}-0${day}`
   }
-  addMao = (obj={}) => {
-    let data = {}
+  addMao = (isUpdate) => {
+    let data = {isUpdate:isUpdate||false}
     for (let i = 0; i < this.state.list.length; i++) {
       if (this.state.list[i].value == '' || this.state.list[i].value == undefined) {
         ToastAndroid.show(`请输入${this.state.list[i]['label']}`, ToastAndroid.SHORT)
@@ -310,10 +310,13 @@ export default class Add extends React.Component {
 
     this.setState({ loading: true })
 
-    const body = format(Object.assign({},data,obj))
+    console.log(1111)
+    // console.log(data)
 
+    const body = format(data)
+console.log(body)
 
-    fetch(url.insert, {
+    fetch(url.edit, {
       method: 'POST',
       headers: {
         "Content-Type": 'application/x-www-form-urlencoded',
@@ -323,6 +326,7 @@ export default class Add extends React.Component {
       .then(res => {
         this.setState({ loading: false })
         const status = Number(res.code);
+        console.log(res.msg)
         ToastAndroid.show(res.msg, ToastAndroid.SHORT)
         if (status === 1) {
           // 添加成功
@@ -343,7 +347,7 @@ export default class Add extends React.Component {
             'sorry，',
             res.msg,
             [
-              {text:'修改数据',onPress:()=>{this.addMao({isUpdate:true})}},
+              {text:'修改数据',onPress:()=>{}},
               {text:'取消',onPress:()=>{ToastAndroid.show('您已取消',ToastAndroid.SHORT)}},
             ],
             {cancelable:true}
