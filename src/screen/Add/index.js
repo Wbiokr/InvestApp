@@ -231,7 +231,7 @@ export default class Add extends React.Component {
                 backgroundColor={colors.blue}
                 containerViewStyle={{ marginVertical: 10, marginBottom: 40 }}
                 icon={{ name: 'check' }}
-                onPress={this.addMao}
+                onPress={()=>{this.addMao(false)}}
               />
           }
 
@@ -296,7 +296,7 @@ export default class Add extends React.Component {
     return `${year}-${month}-0${day}`
   }
   addMao = (isUpdate) => {
-    let data = {isUpdate:isUpdate||false}
+    let data = {isUpdate}
     for (let i = 0; i < this.state.list.length; i++) {
       if (this.state.list[i].value == '' || this.state.list[i].value == undefined) {
         ToastAndroid.show(`请输入${this.state.list[i]['label']}`, ToastAndroid.SHORT)
@@ -310,11 +310,7 @@ export default class Add extends React.Component {
 
     this.setState({ loading: true })
 
-    console.log(1111)
-    // console.log(data)
-
     const body = format(data)
-console.log(body)
 
     fetch(url.edit, {
       method: 'POST',
@@ -347,7 +343,7 @@ console.log(body)
             'sorry，',
             res.msg,
             [
-              {text:'修改数据',onPress:()=>{}},
+              {text:'修改数据',onPress:()=>{this.addMao(true)}},
               {text:'取消',onPress:()=>{ToastAndroid.show('您已取消',ToastAndroid.SHORT)}},
             ],
             {cancelable:true}
