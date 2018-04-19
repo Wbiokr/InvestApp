@@ -107,7 +107,7 @@ export default class Add extends React.Component {
           iconName: 'hourglass-end',
           value: '',
           keyboardType: 'numeric',
-          key: 'endTime',
+          key: 'duration',
         },
         {
           label: '手机尾号',

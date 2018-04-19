@@ -343,6 +343,7 @@ export default class App extends React.Component{
     })
     .then(res=>res.json())
     .then(res=>{
+        console.log(res)
         cbAfter&&cbAfter(res)
     })
     .catch(err=>console.log(err))
