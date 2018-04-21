@@ -45,8 +45,7 @@ export default class App extends React.Component {
     super(props);
     // this.showMenu=this.showMenu.bind(this);
     this.state = {
-      cash: [
-      ],
+      cash: [],
       currentState: AppState.currentState,
       startTime: 0,
       Loading: true,
@@ -286,19 +285,19 @@ export default class App extends React.Component {
     })
   }
   cbMenu(i) {
-    // this.setState({
-    //   alt: false,
-    // })
+    this.setState({
+      alt: false,
+    })
     if (Number(i) === 0) {
       AsyncStorage.setItem('editItem', JSON.stringify(this.state.cash[this.state.index]))
         .then((res) => {
-          alert(res)
+          // alert(res)
           this.props.navigation.navigate('Add', { type: 'Watch' })
         })
 
     } else if (Number(i) === 1) {
       AsyncStorage.setItem('editItem', JSON.stringify(this.state.cash[this.state.index]), () => {
-        this.prop.navigation.navigate('Add', { type: 'Edit' })
+        this.props.navigation.navigate('Add', { type: 'Edit' })
 
       })
     } else if (Number(i) === 2) {
@@ -311,24 +310,35 @@ export default class App extends React.Component {
           "Content-Type": 'application/x-www-form-urlencoded',
         },
         body: format({
-          _id: this.data[this.state.index]['_id']
+          _id: this.state.cash[this.state.index]['_id']
         })
       })
         .then(res => res.json())
         .then(res => {
+          
+          if (res.code == 0 || res.code == -1) {
+            Alert.alert(
+              '提示',
+              res.msg,
+              [
+                {text:'知道了',style:'cancel'}
+              ],
+              {cancelable:true}
+            )
+          } else if (res.code == 1) {
+            Alert.alert('成功提示',res.msg,[{text:'好的'}])
+            let cash = this.state.cash
+            cash.splice(this.state.index, 1)
+            this.setState({
+              cash
+            })
+          }
+        })
+        .catch(err => alert(err))
+        .done(()=>{
           this.setState({
             Loading: false,
           })
-          if (res.code == 0 || res.code == -1) {
-            Alert.alert(res.msg)
-          } else if (res.code == 1) {
-            Alert.alert(res.msg)
-            let data = this.state.data
-            data.splice(this.state.index, 1)
-            this.setState({
-              data
-            })
-          }
         })
     }else {
       ToastAndroid.show('您已取消！',ToastAndroid.SHORT)
@@ -369,13 +379,13 @@ export default class App extends React.Component {
         }
         this.setState({
           page: 1,
-          refreshing: true
+          refreshing: this.state.Loading?false:true,
         })
       },
       (res) => {
         if (Number(res.code) === 1) {
           this.setState({
-            cash: res.result
+            cash: res.data
           })
         }
       }
@@ -397,6 +407,7 @@ export default class App extends React.Component {
     })
       .then(res => res.json())
       .then(res => {
+        console.log(res)
         cbAfter && cbAfter(res)
       })
       .catch(err => alert(err))
@@ -407,7 +418,7 @@ export default class App extends React.Component {
             Loading: false,
             isLoadMore: false,
           })
-        }, 300)
+        }, 30)
       })
 
   }
