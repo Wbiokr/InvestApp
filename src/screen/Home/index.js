@@ -334,63 +334,6 @@ export default class App extends React.Component {
       ToastAndroid.show('您已取消！',ToastAndroid.SHORT)
     }
 
-
-    // console.log(i)
-    // this.setState({
-    //   alt: false,
-    // })
-
-    //  AsyncStorage.getItem('editItem')
-    // alert(value)
-    // console.log(value)
-    // new Promise((res, rej) => {
-    //   // alert(23)
-    // }).then(() => {
-    //   alert(100)
-    //   if (Number(i) === 0) {
-    //     AsyncStorage.setItem('editItem', JSON.stringify(this.state.cash[this.state.index]))
-    //       .then((res) => {
-    //         this.props.navigation.navigate('Add', { type: 'Watch' })
-    //       })
-
-    //   } else if (Number(i) === 1) {
-    //     AsyncStorage.setItem('editItem', JSON.stringify(this.data[this.state.index]), () => {
-    //       this.prop.navigation.navigate('Add', { type: 'Edit' })
-
-    //     })
-    //   } else if (Number(i) === 2) {
-    //     this.setState({
-    //       Loading: true
-    //     })
-    //     fetch(url.delete, {
-    //       method: 'post',
-    //       headers: {
-    //         "Content-Type": 'application/x-www-form-urlencoded',
-    //       },
-    //       body: format({
-    //         _id: this.data[this.state.index]['_id']
-    //       })
-    //     })
-    //       .then(res => res.json())
-    //       .then(res => {
-    //         this.setState({
-    //           Loading: false,
-    //         })
-    //         if (res.code == 0 || res.code == -1) {
-    //           Alert.alert(res.msg)
-    //         } else if (res.code == 1) {
-    //           Alert.alert(res.msg)
-    //           let data = this.state.data
-    //           data.splice(this.state.index, 1)
-    //           this.setState({
-    //             data
-    //           })
-    //         }
-    //       })
-    //   }
-    // })
-
-
   }
 
   cancel() {
