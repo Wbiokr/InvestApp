@@ -45,6 +45,7 @@ import Loading from '../../components/Loading';
 export default class Add extends React.Component {
   constructor(props) {
     super(props)
+    console.log(props)
     this.state = {
       loading: false,
       // opc:1,
@@ -254,6 +255,7 @@ export default class Add extends React.Component {
     )
   }
   componentDidMount() {
+    console.log(this.props)
   }
   cbSelect(i){
 
