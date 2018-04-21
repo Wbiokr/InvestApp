@@ -15,7 +15,7 @@ export default class RadioBox extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      index: 0,
+      index: '',
       animatedScale: new Animated.Value(0)
     }
   }

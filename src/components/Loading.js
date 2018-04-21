@@ -4,10 +4,13 @@ import {
   ActivityIndicator,
   View,
   Text,
-  StyleSheet
+  StyleSheet,
+  Dimensions,
 } from 'react-native';
 
 import colors from '../utils/color'
+
+console.log(Dimensions.get('window'))
 
 export default class Loading extends React.Component{
   render(){
@@ -28,11 +31,18 @@ export default class Loading extends React.Component{
 
 const loadStyles=StyleSheet.create({
   wrapper:{
-    flex:1,
+    // flex:1,
     justifyContent:'center',
     alignItems:'center',
+    position:'absolute',
+    height:Dimensions.get('window').height,
+    width:Dimensions.get('window').width,
+    marginTop:-100,
+    zIndex:10,
+
   },
   box:{
+
     paddingVertical:12,
     paddingHorizontal:20,
     // maxWidth:

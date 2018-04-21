@@ -1,4 +1,4 @@
-const env='dev'
+const env='dev12'
 
 const agree=env==='dev'?'http://192.168.1.2:18080/':'http://wbiokr.duapp.com/';
 
@@ -14,4 +14,5 @@ export default {
   // invested:`${agree}invest/`,
 
   edit:`${agree}invest/edit`,
+  delete:`${agree}invest/delete`,
 }

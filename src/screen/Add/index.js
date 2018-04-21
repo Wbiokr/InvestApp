@@ -39,6 +39,9 @@ import AnimatedLabel from '../../components/AnimatedLabel'
 
 import Radio from '../../components/RadioBox'
 
+import Loading from '../../components/Loading';
+
+
 export default class Add extends React.Component {
   constructor(props) {
     super(props)
@@ -49,6 +52,7 @@ export default class Add extends React.Component {
       key: '',
       alt:false,
       altIndex:'',
+      
       phoneList: [
         { txt: '15138678960' },
         { txt: '13186962939' },
@@ -88,14 +92,14 @@ export default class Add extends React.Component {
           keyboardType: 'numeric',
           key: 'rateHas'
         },
-        {
-          label: '代收利息',
-          // label:'总撸数额',
-          iconName: 'rupee',
-          value: '',
-          keyboardType: 'numeric',
-          key: 'rateIng',
-        },
+        // {
+        //   label: '代收利息',
+        //   // label:'总撸数额',
+        //   iconName: 'rupee',
+        //   value: '',
+        //   keyboardType: 'numeric',
+        //   key: 'rateIng',
+        // },
         {
           label: '开始时间',
           value: '',
@@ -128,7 +132,10 @@ export default class Add extends React.Component {
   }
   render() {
     return (
-      <View>
+      <View style={{flex:1,position:'relative'}}>
+        {
+          this.state.loading?<Loading />:null
+        }
         <ScrollView style={{ paddingTop: 5, paddingBottom: 50, paddingHorizontal: 20 }}>
           {
             this.state.list.map((item, index) => (
@@ -184,7 +191,7 @@ export default class Add extends React.Component {
                       underlineColorAndroid='transparent'
                       keyboardType={item.keyboardType || 'default'}
                       caretHidden={true}
-                      editable={true}
+                      editable={false}
                     />
                     : <TextInput
                       onFocus={() => {
@@ -203,6 +210,7 @@ export default class Add extends React.Component {
                       clearButtonMode='always'
                       blurOnSubmit={true}
                       keyboardType={item.keyboardType || 'default'}
+                      editable={!this.state.loading}
                       onChangeText={value => {
                         const newItem = Object.assign({}, item, { value })
                         let list = this.state.list;

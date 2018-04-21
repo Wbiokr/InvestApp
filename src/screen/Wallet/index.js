@@ -24,6 +24,8 @@ import colors from '../../utils/color';
 
 import RePull from '../../components/RnPull'
 
+import Loading from '../../components/Loading'
+
 // import Pull from '../../components/pull';
 
 
@@ -69,6 +71,7 @@ export default class App extends React.Component {
           />
         }
       />
+      // <Loading />
 
     )
   }
