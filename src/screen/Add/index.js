@@ -13,6 +13,7 @@ import {
   TimePickerAndroid,
   DatePickerAndroid,
   TouchableWithoutFeedback,
+  AsyncStorage,
 } from 'react-native';
 
 import {
@@ -44,10 +45,11 @@ import Loading from '../../components/Loading';
 
 export default class Add extends React.Component {
   constructor(props) {
-    super(props)
     console.log(props)
+    super(props)
     this.state = {
       loading: false,
+      isEditabled:true,
       // opc:1,
       // bg:colors.gray4,
       key: '',
@@ -87,7 +89,7 @@ export default class Add extends React.Component {
           key: 'rateAll',
         },
         {
-          label: '已返红包',
+          label: '红包返现',
           iconName: 'inr',
           value: '',
           keyboardType: 'numeric',
@@ -147,6 +149,10 @@ export default class Add extends React.Component {
                     <Text
                     onPress={
                       () => {
+                        console.log(this.state.isEditabled)
+                        if(!this.state.isEditabled){
+                          return false;
+                        }
                         if(item.key==='phone'){
                           this.setState({
                             alt:true,
@@ -166,10 +172,10 @@ export default class Add extends React.Component {
                     }
                     style={{
                       position: 'absolute',
-                      top: 0,
+                      bottom: 0,
                       left: 0,
                       width: '100%',
-                      height: '100%',
+                      height: 50,
                       // backgroundColor:'#f00',
                       zIndex: 100,
 
@@ -192,7 +198,9 @@ export default class Add extends React.Component {
                       underlineColorAndroid='transparent'
                       keyboardType={item.keyboardType || 'default'}
                       caretHidden={true}
-                      editable={false}
+                      editable={!this.state.loading&&this.state.isEditabled}
+                      
+                      // editable={false}
                     />
                     : <TextInput
                       onFocus={() => {
@@ -211,7 +219,7 @@ export default class Add extends React.Component {
                       clearButtonMode='always'
                       blurOnSubmit={true}
                       keyboardType={item.keyboardType || 'default'}
-                      editable={!this.state.loading}
+                      editable={!this.state.loading&&this.state.isEditabled}
                       onChangeText={value => {
                         const newItem = Object.assign({}, item, { value })
                         let list = this.state.list;
@@ -226,7 +234,9 @@ export default class Add extends React.Component {
           }
 
           {
-            this.state.loading ? <Button
+            this.state.isEditabled?
+            (
+              this.state.loading ? <Button
               ref='btn2'
               title='提交中...'
               raised
@@ -242,6 +252,7 @@ export default class Add extends React.Component {
                 icon={{ name: 'check' }}
                 onPress={()=>{this.addMao(false)}}
               />
+            ):null
           }
 
 
@@ -255,7 +266,37 @@ export default class Add extends React.Component {
     )
   }
   componentDidMount() {
-    console.log(this.props)
+    console.log(3456789000)
+  }
+  componentWillUpdate(){
+    console.log(123456789)
+    // this.setInfor()
+  }
+  componentWillReceiveProps(){
+  }
+  // componentR
+  async setInfor(){
+    console.log(this.props.navigation.state)
+    if(this.props.navigation.state&&this.props.navigation.state.params.type==='Watch'){
+      this.setState({
+        isEditabled:false,
+      })
+    }else{
+      this.setState({
+        isEditabled:true,
+      })
+    }
+   let items =await AsyncStorage.getItem('editItem')
+   items=JSON.parse(items)
+   for(var i in items){
+     this.state.list.forEach((item,index)=>{
+       if(item.key==i){
+         item['value']=String(items[i])
+         this.refs[item['key']].focus()
+        //  console.log(i)
+       }
+     })
+   }
   }
   cbSelect(i){
 
@@ -332,7 +373,6 @@ export default class Add extends React.Component {
       .then(res => {
         this.setState({ loading: false })
         const status = Number(res.code);
-        console.log(res.msg)
         ToastAndroid.show(res.msg, ToastAndroid.SHORT)
         if (status === 1) {
           // 添加成功
@@ -359,6 +399,10 @@ export default class Add extends React.Component {
             {cancelable:true}
           )
         }
+      })
+      .catch(err=>{
+        ToastAndroid.show('网络错误，请检查接口！',ToastAndroid.LONG)
+        this.setState({ loading: false })
       })
   }
 }

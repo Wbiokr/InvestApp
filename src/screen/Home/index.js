@@ -2,6 +2,7 @@ import React from 'react';
 
 import {
   AsyncStorage,
+  ActivityIndicator,
   Alert,
   View,
   Text,
@@ -13,7 +14,7 @@ import {
   BackHandler,
   Platform,
   ToastAndroid,
-  ActivityIndicator,
+  // ActivityIndicator,
   RefreshControl,
   PanResponder,
   TouchableNativeFeedback,
@@ -36,7 +37,9 @@ import RePull from '../../components/RnPull'
 
 import Loading from '../../components/Loading';
 
-import Radios from '../../components/RadioBox'
+import Radios from '../../components/RadioBox';
+
+import { toDate } from '../../utils/date'
 
 const investing = url.record
 
@@ -50,16 +53,18 @@ export default class App extends React.Component {
       startTime: 0,
       Loading: true,
       refreshing: false,
+      isFirst:true,
       loadMore: false,
       show: false,
       // x:10,
       // y:300,
       item: {},
       page: 1,
-      size: 10,
+      size: 5,
       isLoadMore: false,
       alt: false,
       index: '',
+      isLoadEnd:false,
     }
     this.getCash = this.getCash.bind(this)
     this.cbMenu = this.cbMenu.bind(this)
@@ -68,8 +73,12 @@ export default class App extends React.Component {
     let content = <FlatList
       data={this.state.cash}
       renderItem={this.renderItem.bind(this)}
+      ListFooterComponent={this.state.isFirst?null:this.renderFooter.bind(this)}
       ItemSeparatorComponent={this.renderSep.bind(this)}
-      keyExtractor={(item, index) => String(index)}
+      keyExtractor={(item, index) => {
+        // console.log(item)
+        return String(item._id)
+      }}
       refreshControl={
         <RePull
           onRefresh={() => {
@@ -80,8 +89,8 @@ export default class App extends React.Component {
           refreshing={this.state.refreshing}
         />
       }
-    // onEndReached={this.loadMore.bind(this)}
-    // onEndReachedThreshold={0.1}
+      onEndReached={this.loadMore.bind(this)}
+      onEndReachedThreshold={0.1}
     />
     return (
       <LinearGradient
@@ -93,18 +102,18 @@ export default class App extends React.Component {
           <View style={styles.HeaderBox} >
 
             <View style={styles.HeaderItem}>
-              <Text style={styles.HeaderCnt}>{this.state.totalAdd || '--'}<Text style={{ fontSize: 10 }}>&lt;{this.state.totalMonth || '--'}&gt;</Text></Text>
-              <Text style={styles.HeaderTil}>累计本金<Text style={{ fontSize: 8 }}>&lt;在投&gt;</Text></Text>
+              <Text style={styles.HeaderCnt}>{this.state.totalAdd || '0'}<Text style={{ fontSize: 10 }}>&lt;{this.state.totalCashUnit || '0'}&gt;</Text></Text>
+              <Text style={styles.HeaderTil}>累计本金<Text style={{ fontSize: 8 }}>&lt;本月&gt;</Text></Text>
             </View>
 
             <View style={styles.HeaderItem}>
-              <Text style={styles.HeaderCnt}>{this.state.allEarn || '--'}<Text style={{ fontSize: 10 }}>&lt;{this.state.monthEarn || '--'}&gt;</Text></Text>
+              <Text style={styles.HeaderCnt}>{this.state.allEarn || '0'}<Text style={{ fontSize: 10 }}>&lt;{this.state.totalRateUnit || '0'}&gt;</Text></Text>
               <Text style={styles.HeaderTil}>累计撸毛<Text style={{ fontSize: 8 }}>&lt;本月&gt;</Text></Text>
             </View>
 
             <View style={styles.HeaderItem}>
-              <Text style={styles.HeaderCnt}>{this.state.redBag || '--'}<Text style={{ fontSize: 10 }}>&lt;{this.state.rate || '--'}&gt;</Text></Text>
-              <Text style={styles.HeaderTil}>已返红包<Text style={{ fontSize: 8 }}>&lt;代收利息&gt;</Text></Text>
+              <Text style={styles.HeaderCnt}>{this.state.redBag || '0'}<Text style={{ fontSize: 10 }}>&lt;{this.state.totalBagUnit || '0'}&gt;</Text></Text>
+              <Text style={styles.HeaderTil}>红包返现<Text style={{ fontSize: 8 }}>&lt;本月&gt;</Text></Text>
             </View>
 
           </View>
@@ -121,12 +130,7 @@ export default class App extends React.Component {
       </LinearGradient>
     )
   }
-  componentDidUpdate() {
-    // if(this.props.navigation.state.params&&this.props.navigation.state.params.type==='update'){
-    //   // this.setState({Loading:true});
-    //   // this.getCash()
-    // }
-  }
+
   componentWillMount() {
     this.panResponder = PanResponder.create({
       //要求成为响应者,返回布尔值true表示愿意成为响应者
@@ -236,23 +240,22 @@ export default class App extends React.Component {
 
     return (
       <TouchableOpacity
-        // background={TouchableNativeFeedback.SelectableBackground()}
-        // underlayColor='transparent'
-        // onPress={()=>{}}
-        // activeOpacity={0.7}
-        // delayLongPress={100}
-        onLongPress={this.showMenu.bind(this, index)}
-        activeOpacity={0.7}
+        delayLongPress={1000}
+        onLongPress={()=>{
+          // alert(12)
+          this.showMenu.bind(this)(index)
+        }}
+        activeOpacity={0.5}
       >
         <View style={styles.itemBox}>
           <View style={styles.itemTitle}>
             <Text style={[styles.itemTitleTxt]}>{item.name}<Text>-{item.phone}-{item.card}</Text> </Text>
-            <Text style={[styles.itemTitleTxt, { color: colors.blue }]}>{item.endTime}天</Text>
+            <Text style={[styles.itemTitleTxt, { color: colors.blue }]}>{item.duration}天</Text>
           </View>
 
           <View style={styles.itemCnt}>
-            <View style={styles.itemCntItem}>
-              <Text style={styles.itemCntItemTop}>{item.startTime}</Text>
+            <View stylre={styles.itemCntItem}>
+              <Text style={styles.itemCntItemTop}>{toDate(item.startTime)}</Text>
               <Text style={styles.itemCntItemBottom}>成交时间</Text>
             </View>
             <View style={styles.itemCntItem}>
@@ -272,7 +275,40 @@ export default class App extends React.Component {
     return <View style={{ height: 10, backgroundColor: 'transparent', width: '100%' }}></View>
   }
   renderFooter() {
-    return <View style={{ paddingVertical: 10, borderTopColor: colors.blue, borderTopWidth: 0.5 }}><Text style={{ fontSize: 12, color: colors.blue, textAlign: 'center' }}>到底了！！！！！！！</Text></View>
+    return <View 
+        style={{
+           paddingVertical: 10,
+           borderTopColor: colors.blue,
+           height:40,
+          //  visi
+           borderTopWidth: 0.5 }}>
+           {
+            this.state.isLoadEnd?<Text style={{ 
+              fontSize: 12, 
+              color: colors.gray3, 
+              textAlign: 'center' }}>到底了~</Text>:
+              <View style={{
+                flex:1,
+                flexDirection:'row',
+                justifyContent:'center'
+              }}>
+              <ActivityIndicator 
+                animating={true}
+                color={colors.blue}
+                size='small'
+              />
+              <Text style={
+                {
+                  fontSize: 12, 
+                  color: colors.blue, 
+                  textAlign: 'center' 
+                }
+              }>
+                加载中...
+              </Text>
+              </View>
+           }
+           </View>
   }
   renderHeader() {
     return <View style={{ paddingVertical: 5, borderBottomColor: colors.blue, borderBottomWidth: 0.5 }}><Text style={{ fontSize: 12, color: colors.blue, textAlign: 'center' }}>Pull to Refresh</Text></View>
@@ -284,6 +320,10 @@ export default class App extends React.Component {
       alt: true,
     })
   }
+  async getItem() {
+    const v = await AsyncStorage.getItem('editItem')
+    console.log(v)
+  }
   cbMenu(i) {
     this.setState({
       alt: false,
@@ -291,13 +331,15 @@ export default class App extends React.Component {
     if (Number(i) === 0) {
       AsyncStorage.setItem('editItem', JSON.stringify(this.state.cash[this.state.index]))
         .then((res) => {
-          // alert(res)
           this.props.navigation.navigate('Add', { type: 'Watch' })
         })
 
     } else if (Number(i) === 1) {
       AsyncStorage.setItem('editItem', JSON.stringify(this.state.cash[this.state.index]), () => {
-        this.props.navigation.navigate('Add', { type: 'Edit' })
+        this.props.navigation.navigate('Add', {
+          type: 'Edit',
+        })
+        
 
       })
     } else if (Number(i) === 2) {
@@ -315,18 +357,18 @@ export default class App extends React.Component {
       })
         .then(res => res.json())
         .then(res => {
-          
+
           if (res.code == 0 || res.code == -1) {
             Alert.alert(
               '提示',
               res.msg,
               [
-                {text:'知道了',style:'cancel'}
+                { text: '知道了', style: 'cancel' }
               ],
-              {cancelable:true}
+              { cancelable: true }
             )
           } else if (res.code == 1) {
-            Alert.alert('成功提示',res.msg,[{text:'好的'}])
+            Alert.alert('成功提示', res.msg, [{ text: '好的' }])
             let cash = this.state.cash
             cash.splice(this.state.index, 1)
             this.setState({
@@ -335,13 +377,13 @@ export default class App extends React.Component {
           }
         })
         .catch(err => alert(err))
-        .done(()=>{
+        .done(() => {
           this.setState({
             Loading: false,
           })
         })
-    }else {
-      ToastAndroid.show('您已取消！',ToastAndroid.SHORT)
+    } else {
+      ToastAndroid.show('您已取消！', ToastAndroid.SHORT)
     }
 
   }
@@ -352,75 +394,149 @@ export default class App extends React.Component {
     })
   }
   loadMore() {
-    this.getCash(
-      () => {
-        if (this.state.refreshing || this.state.isLoadMore) {
-          return;
-        }
-        this.setState({
-          page: this.state.page + 1,
-          isLoadMore: true
-        })
-      },
-      (res) => {
-        if (Number(res.code) === 1) {
-          this.setState({
-            cash: this.state.cash.concat(res.result)
-          })
-        }
+    this.promise(()=>{
+
+      if (this.state.refreshing ||this.state.isLoadEnd || this.state.isLoadMore||this.state.isFirst) {
+        this.state.isLoadEnd?ToastAndroid.show('已经到底啦！',ToastAndroid.SHORT):null;
+        return false;
       }
-    )
+      console.log('label:::')
+      this.setState({
+        page: this.state.page+1,
+      })
+      return true;
+    })
+      .then(()=>{
+        this.getCash(
+          this.getCash.bind(this)(
+              ()=>{
+                this.setState({
+                  isLoadMore: true
+                  
+                })
+              },  
+              (res) => {
+                if (Number(res.code) === 1) {
+                  if(res.data.length<this.state.size){
+                    this.setState({
+                      isLoadEnd:true
+                    })
+                  }
+                  this.setState({
+                    cash: this.state.cash.concat(res.data)
+                  })
+      
+                  console.log(this.state.cash)
+                  console.log(this.state.page)
+                }
+              }
+            )
+        )
+      })
+      .catch(()=>{
+
+        // alert(23)
+      })
+    
   }
   refresh() {
-    this.getCash.bind(this)(
-      () => {
-        if (this.state.refreshing || this.state.isLoadMore) {
-          return;
-        }
-        this.setState({
-          page: 1,
-          refreshing: this.state.Loading?false:true,
-        })
-      },
-      (res) => {
-        if (Number(res.code) === 1) {
-          this.setState({
-            cash: res.data
-          })
-        }
+    this.promise(()=>{
+      if (this.state.refreshing || this.state.isLoadMore) {
+        return false;
       }
-    )
+      this.setState({
+        page: 1,
+        refreshing: this.state.Loading ? false : true,
+        isLoadEnd:false,
+      })
+      return true;
+    }).then(()=>{
+      
+      this.getCash.bind(this)(
+        () => {
+          // if (this.state.refreshing || this.state.isLoadMore) {
+          //   return;
+          // }
+          // this.setState({
+          //   page: 1,
+          //   refreshing: this.state.Loading ? false : true,
+          // })
+        },
+        (res) => {
+          if (Number(res.code) === 1) {
+            this.setState({
+              cash: res.data,
+              // isFirst:false,
+            })
+          }
+        }
+      )
+    }).catch(()=>{
+      alert('catch')
+    })
   }
   getCash = (cbBefore, cbAfter) => {
 
+    if(this.state.isLoadMore){
+      return ;
+    }
     cbBefore && cbBefore()
 
-    fetch(investing, {
-      method: 'POST',
-      headers: {
-        "Content-Type": 'application/x-www-form-urlencoded',
-      },
-      body: format({
-        page: this.state.page,
-        size: this.state.size,
-      })
-    })
-      .then(res => res.json())
-      .then(res => {
-        console.log(res)
-        cbAfter && cbAfter(res)
-      })
-      .catch(err => alert(err))
-      .done(() => {
-        setTimeout(() => {
-          this.setState({
-            refreshing: false,
-            Loading: false,
-            isLoadMore: false,
-          })
-        }, 30)
-      })
 
+      console.log('应该页码数：'+this.state.page)
+      fetch(investing, {
+        method: 'POST',
+        headers: {
+          "Content-Type": 'application/x-www-form-urlencoded',
+        },
+        body: format({
+          page: this.state.page,
+          size: this.state.size,
+        })
+      })
+        .then(res => res.json())
+        .then(res => {
+          console.log(res)
+          cbAfter && cbAfter(res)
+          this.setState({
+            totalAdd: res.totalCash,
+            allEarn: res.totalRate,
+            redBag: res.totalBag,
+            totalRateUnit: res.totalRateUnit,
+            totalCashUnit: res.totalCashUnit,
+            totalBagUnit: res.totalBagUnit,
+          })
+          console.log(this.state.cash)
+        })
+        .catch(err => alert(err))
+        .done(() => {
+          setTimeout(() => {
+            this.setState({
+              refreshing: false,
+              Loading: false,
+              isLoadMore: false,
+              isFirst:false,
+            })
+          }, 30)
+        })
+  
+    // })
+  }
+  promise=(bf)=>{
+    return new Promise((res,rej)=>{
+      const isJect=bf()
+      setTimeout(()=>{
+        console.log('label:2,label:2')
+        if(isJect){
+          res()
+        }else{
+          rej&&rej()
+          // ()=>{
+
+          // }
+        }
+      },100)
+    })
   }
 }
 

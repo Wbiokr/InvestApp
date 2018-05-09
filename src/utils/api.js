@@ -1,6 +1,6 @@
-const env='dev'
+const env='fsdfdev'
 
-const agree=env==='dev'?'http://192.168.1.2:18080/':'http://wbiokr.duapp.com/';
+const agree=env==='dev'?'http://192.168.1.69:18080/':'http://wbiokr.duapp.com/';
 
 export default {
   agree,
@@ -13,6 +13,9 @@ export default {
 
   // invested:`${agree}invest/`,
 
+
   edit:`${agree}invest/edit`,
+  
   delete:`${agree}invest/delete`,
 }
+// d=====(￣▽￣*)b

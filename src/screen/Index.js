@@ -1,5 +1,12 @@
 import React from 'react';
 
+// import {
+//   Provider,
+//   connect
+// } from 'react-redux'
+
+// import store from '../redux/index'
+
 import {
   View,
   Text,
@@ -12,7 +19,9 @@ import {
 
 import {
   TabNavigator,
+  // createBottomTabNavigator,
   TabBarBottom,
+  addNavigationHelpers
 } from 'react-navigation';
 
 import Home from './Home/';
@@ -129,6 +138,26 @@ export default TabNavigator(
     }
   }
 );
+
+// class Root extends React.Component{
+//   // constructor(props){
+//   //   super(props)
+//   //   console.log(props)
+//   // }
+//   render(){
+//     return (
+//       // <Provider store={store}>
+//         <TabNav
+//           // navigation={addNavigationHelpers({
+//           //   ddd:'fsfds'
+//           // })}
+//         />
+//       // </Provider>
+//     )
+//   }
+// }
+
+// export default Root;
 
 const styles=StyleSheet.create({
   icon:{
