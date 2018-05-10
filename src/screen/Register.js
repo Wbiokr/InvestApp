@@ -16,7 +16,7 @@ import {createDrawerNavigator,createStackNavigator} from 'react-navigation'
 
 import colors from '../utils/color';
 
-class Login extends React.Component{
+export default class Register extends React.Component{
   constructor(props){
     super(props);
     this.state={
@@ -24,13 +24,71 @@ class Login extends React.Component{
       bg:colors.gray4,
       name:'',
       pass:'',
+      phoneNum:1,
+      phoneArr:[]
     }
   }
   render(){
+    const PhoneCom=null;
+    for(let i=0;i<this.state.phoneNum;i++){
+      PhoneCom+=<TouchableNativeFeedback>
+                  <View>
+                    <TextInput
+                      placeholder='请输入绑定手机号'
+                      // defaultValue={this.state.phoneArr[i]}
+                      placeholderTextColor={colors.gray7}
+                      caretHidden={false}
+                      keyboardType='numeric'
+                      secureTextEntry={true}
+                      password={true}
+                      selectionColor={colors.blue}
+                      maxLength={30}
+                      multiline={false}
+                      clearButtonMode='while-editing'
+                      underlineColorAndroid='transparent'
+                      returnKeyLabel='GO'
+                      onChangeText={v=>{this._unDatePass(v)}}
+                      onSelectionChange={()=>{}}
+                      style={styles.input}
+                    />
+                    <TouchableNativeFeedback>
+                      <Text 
+                        onPress={this._AddPhone.bind(this)}
+                        style={{
+                          position:'absolute',
+                          right:0,
+                          height:'100%',
+                          fontSize:20,
+                          width:50,
+                          textAlign:'center',
+                          lineHeight:46,
+                          bottom:0,
+                          color:colors.blueGreen,
+                          // backgroundColor:'#c0c'
+                        }}
+                      >
+                        ADD
+                      </Text>
+                    </TouchableNativeFeedback>
+                  </View>
+                </TouchableNativeFeedback>
+    }
     return(
       <View style={styles.container}>
-        <View style={styles.title}>
-          <Image style={styles.image} source={require('../img/logo.png')} />
+        <View 
+          style={{
+            // flex:1,
+            width:'100%',
+            paddingLeft:50,
+            flexDirection:'row',
+            // backgroundColor:'#f00',
+          }}
+        >
+          <Text style={{
+            textAlign:'center',
+            color:colors.blue,
+            fontSize:14,
+          }}>请输入注册信息</Text>
         </View>
         <View style={styles.form}>
           <TouchableNativeFeedback>
@@ -44,8 +102,6 @@ class Login extends React.Component{
               maxLength={15}
               multiline={false}
               clearButtonMode='while-editing'
-              // inlineImageLeft={}//左侧图标
-              // inlineImagePadding={{}}//左侧图标padding样式
               underlineColorAndroid='transparent'
               returnKeyLabel='飞起来'
               onChangeText={(v)=>{this._upDateName(v)}}
@@ -72,25 +128,29 @@ class Login extends React.Component{
               style={styles.input}
             />
           </TouchableNativeFeedback>
-          <TouchableOpacity style={styles.btnBox} activeOpacity={this.state.opc} onPress={this._login}>
-            <Text style={[styles.btn,{backgroundColor:this.state.bg}]}>登&nbsp;&nbsp;录</Text>
+          {
+            PhoneCom
+          }
+          <TouchableOpacity style={styles.btnBox} activeOpacity={this.state.opc} >
+            <Text onPress={this._Register} style={[styles.btn,{backgroundColor:this.state.bg}]}>注&nbsp;&nbsp;册</Text>
+            <Text onPress={this._Login.bind(this)} style={[styles.btn,styles.btn2]}>去登陆</Text>
+          
           </TouchableOpacity>
-          <View style={styles.registerBox}>
-            <Text style={styles.registerLabel}>还没有账号？</Text>
-            <Text style={styles.registerAction} onPress={this._register.bind(this)}>去注册</Text>
-          </View>
+          
           
         </View>
         
       </View>
     )
   }
-  _register(){
-    this.props.navigation.replace('Register')
+  _Login(){
+    this.props.navigation.replace('Login')
+  }
+  _AddPhone(){
+    alert(123)
   }
   _upDateName=(name)=>{
     this.setState({name});
-    console.log(this.state)
     if(String(this.state.pass).length>1&&String(this.state.name).length>1){
       this.setState({opc:0.7,bg:colors.blue})
     }else{
@@ -105,7 +165,7 @@ class Login extends React.Component{
       this.setState({opc:1,bg:colors.gray4})
     }
   }
-  _login=()=>{
+  _Register=()=>{
     const name=this.state.name;
     const pass=this.state.pass;
 
@@ -123,25 +183,14 @@ class Login extends React.Component{
 }
 
 
-export default createDrawerNavigator(
-  {
-    Index:{
-      screen:Login,
-    }
-  },
-  {
-    initialRoute:'Index'
-  }
-)
-
 const styles=StyleSheet.create({
   container:{
     flex:1,
     width:'100%',
     flexDirection:'column',
-    justifyContent:'space-around',
+    // justifyContent:'space-around',
     alignItems:'center',
-    paddingBottom:100,
+    paddingTop:50,
     backgroundColor:colors.white
   },
   input:{
@@ -155,10 +204,12 @@ const styles=StyleSheet.create({
   },
   btnBox:{
     marginTop:20,
+    flexDirection:'row',
+    justifyContent:'space-between'
   },
   btn:{
-    // flex:1,
-    width:'100%',
+    flex:1,
+    // width:'50%',
     backgroundColor:colors.gray4,
     color:colors.white,
     textAlign:'center',
@@ -167,7 +218,12 @@ const styles=StyleSheet.create({
     fontSize:16,
     letterSpacing:60,
     borderRadius:6,
-    
+  },
+  btn2:{
+    color:colors.blue,
+    backgroundColor:'transparent',
+    fontSize:13,
+    // textAlign:'right',
   },
   form:{
     paddingHorizontal:30,

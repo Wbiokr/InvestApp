@@ -16,16 +16,12 @@ import naviga, {
 
 import Login from './screen/Login';
 import Index from './screen/Index';
+import Register from './screen/Register'
 
 import { Provider, connect } from 'react-redux';
 
 import store from './redux/index.js'
 
-console.log(store.getState())
-console.log(naviga)
-// import Pass from './screen/Pass';
-
-// AsyncStorage
 
 const RoutesConfig = StackNavigator(
   {
@@ -35,9 +31,12 @@ const RoutesConfig = StackNavigator(
     Index: {
       screen: Index,
     },
+    Register:{
+      screen: Register,
+    }
   },
   {
-    initialRouteName: 'Login',
+    initialRouteName: 'Register',
     initialRouteParams: {
       name: 'chen'
     },

@@ -19,7 +19,7 @@ import {
 
 import {
   TabNavigator,
-  // createBottomTabNavigator,
+  createBottomTabNavigator,
   TabBarBottom,
   addNavigationHelpers
 } from 'react-navigation';
@@ -139,25 +139,6 @@ export default TabNavigator(
   }
 );
 
-// class Root extends React.Component{
-//   // constructor(props){
-//   //   super(props)
-//   //   console.log(props)
-//   // }
-//   render(){
-//     return (
-//       // <Provider store={store}>
-//         <TabNav
-//           // navigation={addNavigationHelpers({
-//           //   ddd:'fsfds'
-//           // })}
-//         />
-//       // </Provider>
-//     )
-//   }
-// }
-
-// export default Root;
 
 const styles=StyleSheet.create({
   icon:{
