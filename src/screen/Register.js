@@ -3,6 +3,7 @@ import React from 'react';
 import {
   View,
   TextInput,
+  ScrollView,
   Text,
   ToastAndroid,
   TouchableNativeFeedback,
@@ -25,56 +26,16 @@ export default class Register extends React.Component{
       name:'',
       pass:'',
       phoneNum:1,
-      phoneArr:[]
+      phoneArr:['']
     }
   }
   render(){
-    const PhoneCom=null;
-    for(let i=0;i<this.state.phoneNum;i++){
-      PhoneCom+=<TouchableNativeFeedback>
-                  <View>
-                    <TextInput
-                      placeholder='请输入绑定手机号'
-                      // defaultValue={this.state.phoneArr[i]}
-                      placeholderTextColor={colors.gray7}
-                      caretHidden={false}
-                      keyboardType='numeric'
-                      secureTextEntry={true}
-                      password={true}
-                      selectionColor={colors.blue}
-                      maxLength={30}
-                      multiline={false}
-                      clearButtonMode='while-editing'
-                      underlineColorAndroid='transparent'
-                      returnKeyLabel='GO'
-                      onChangeText={v=>{this._unDatePass(v)}}
-                      onSelectionChange={()=>{}}
-                      style={styles.input}
-                    />
-                    <TouchableNativeFeedback>
-                      <Text 
-                        onPress={this._AddPhone.bind(this)}
-                        style={{
-                          position:'absolute',
-                          right:0,
-                          height:'100%',
-                          fontSize:20,
-                          width:50,
-                          textAlign:'center',
-                          lineHeight:46,
-                          bottom:0,
-                          color:colors.blueGreen,
-                          // backgroundColor:'#c0c'
-                        }}
-                      >
-                        ADD
-                      </Text>
-                    </TouchableNativeFeedback>
-                  </View>
-                </TouchableNativeFeedback>
-    }
+    // let PhoneCom=null;
+    // for(let i=0;i<this.state.phoneNum;i++){
+    //   PhoneCom+=
+    // }
     return(
-      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.container}>
         <View 
           style={{
             // flex:1,
@@ -129,7 +90,50 @@ export default class Register extends React.Component{
             />
           </TouchableNativeFeedback>
           {
-            PhoneCom
+            this.state.phoneArr.map((item,index)=>(
+              <TouchableNativeFeedback key={index}>
+                  <View>
+                    <TextInput
+                      ref={ `phone_${index}`}
+                      autoFocus={item.focus}
+                      placeholder='请输入手机号'
+                      placeholderTextColor={colors.gray7}
+                      caretHidden={false}
+                      keyboardType='email-address'
+                      secureTextEntry={false}//设置是否加密
+                      selectionColor={colors.blue}
+                      maxLength={11}
+                      multiline={false}
+                      clearButtonMode='while-editing'
+                      underlineColorAndroid='transparent'
+                      returnKeyLabel='飞起来'
+                      onChangeText={(v)=>{this._upDateName(v)}}
+                      onSelectionChange={()=>{}}
+                      style={styles.input}
+                    />
+                    <TouchableNativeFeedback>
+                      <Text 
+                        onPress={this._AddPhone.bind(this,index)}
+                        style={{
+                          position:'absolute',
+                          right:0,
+                          height:'100%',
+                          fontSize:20,
+                          width:50,
+                          textAlign:'center',
+                          lineHeight:46,
+                          bottom:0,
+                          color:index<this.state.phoneArr.length-1?colors.orange:colors.blueGreen,
+                        }}
+                      >
+                        {
+                          index<this.state.phoneArr.length-1?'DEL':'ADD'
+                        }
+                      </Text>
+                    </TouchableNativeFeedback>
+                  </View>
+                </TouchableNativeFeedback>
+            ))
           }
           <TouchableOpacity style={styles.btnBox} activeOpacity={this.state.opc} >
             <Text onPress={this._Register} style={[styles.btn,{backgroundColor:this.state.bg}]}>注&nbsp;&nbsp;册</Text>
@@ -140,14 +144,29 @@ export default class Register extends React.Component{
           
         </View>
         
-      </View>
+      </ScrollView>
     )
   }
   _Login(){
     this.props.navigation.replace('Login')
   }
-  _AddPhone(){
-    alert(123)
+  _AddPhone(index){
+    
+    let oldArr=this.state.phoneArr;
+    
+    let newArr=oldArr.concat(['']);
+    if(index<this.state.phoneArr.length-1){
+      oldArr.splice(index,1)
+      newArr=oldArr
+    }else{
+      if(this.state.phoneArr.length>=5){
+        ToastAndroid.showWithGravity('手机号限制5个',ToastAndroid.SHORT,ToastAndroid.CENTER)
+        return false ;
+      }
+    }
+    this.setState({
+      phoneArr:newArr
+    })
   }
   _upDateName=(name)=>{
     this.setState({name});
@@ -166,19 +185,36 @@ export default class Register extends React.Component{
     }
   }
   _Register=()=>{
-    const name=this.state.name;
-    const pass=this.state.pass;
+    const name=this.state.name.trim();
+    const pass=this.state.pass.trim();
 
-    if(name!=='ccc'){
-      ToastAndroid.showWithGravity('姓名错误',ToastAndroid.SHORT,ToastAndroid.CENTER)
+    if(name==''){
+      ToastAndroid.showWithGravity('请输入有效账户名！',ToastAndroid.SHORT,ToastAndroid.CENTER)
       return ;
     }
-    if(String(pass)!=='2436'){
-      ToastAndroid.showWithGravity('密码错误',ToastAndroid.SHORT,ToastAndroid.CENTER)
+    if(pass==''){
+      ToastAndroid.showWithGravity('请输入有效密码！',ToastAndroid.SHORT,ToastAndroid.CENTER)
       return ;
     }
-    console.log(this.props)
-    this.props.navigation.navigate('Index')
+    
+    new Promise(()=>{
+
+      Array.from(this.state.phoneArr,(item,index)=>{
+        if(String(item).length<11){
+          ToastAndroid.show(`第${index}个手机号格式错误，请正确输入!`,ToastAndroid.SHORT)
+          // this.$refs['phone_'+index].focus()
+          return false;
+        }
+      })
+
+    }).then(()=>{
+      
+      this.props.navigation.navigate('Index')
+
+    }).catch(()=>{
+      alert(123)
+    })
+
   }
 }
 
@@ -190,7 +226,7 @@ const styles=StyleSheet.create({
     flexDirection:'column',
     // justifyContent:'space-around',
     alignItems:'center',
-    paddingTop:50,
+    paddingTop:20,
     backgroundColor:colors.white
   },
   input:{
