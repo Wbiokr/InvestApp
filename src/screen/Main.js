@@ -9,12 +9,9 @@ import {
   Text
 } from 'react-native'
 
-import Home from './Home/';
-import Add from './Add/';
 import Login from './Login'
 import Register from './Register'
-console.log(123)
-
+import Index from './Index'
 
 
 const App = createStackNavigator(
@@ -34,34 +31,17 @@ const App = createStackNavigator(
       }
     },
 
-    Add: {
-      screen: Add,
-      navigationOptions: {
-        // title:'tianjia',
-        header: () => (
-          <View style={{ backgroundColor: '#ccc' }}>
-            <Text style={{ color: '#f00' }}>增加页</Text>
-          </View>
-        ),
-        // headerTitle:'add page',
-        headerBackTisstle: 'BACK',
-        gesturesEnabled: true,
-        gestureDirection: 'default',
-        headerForceInset: true,
-        headerPressColorAndroid: '#ff0'
-        // headerRight:()=>(
-        //   <View style={{backgroundColor:'#ff0'}}>
-        //     <Text>right</Text>
-        //   </View>
-        // )
+    Main:{
+      screen:Index,
+      navigationOptions:{
+        header:null
       }
     }
   },
   {
-    initialRouteName: 'Register',
+    initialRouteName: 'Login',
     mode: 'modal',
     headerMode: 'screen',
-    // headerTransitionPreset:'fade-in-place',
 
   }
 )

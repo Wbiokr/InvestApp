@@ -86,7 +86,7 @@ class Login extends React.Component{
     )
   }
   _register(){
-    this.props.navigation.replace('Register')
+    this.props.navigation.navigate('Register')
   }
   _upDateName=(name)=>{
     this.setState({name});
@@ -117,8 +117,7 @@ class Login extends React.Component{
       ToastAndroid.showWithGravity('密码错误',ToastAndroid.SHORT,ToastAndroid.CENTER)
       return ;
     }
-    console.log(this.props)
-    this.props.navigation.navigate('Index')
+    this.props.navigation.navigate('Main')
   }
 }
 

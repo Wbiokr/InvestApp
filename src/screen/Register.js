@@ -30,19 +30,13 @@ export default class Register extends React.Component{
     }
   }
   render(){
-    // let PhoneCom=null;
-    // for(let i=0;i<this.state.phoneNum;i++){
-    //   PhoneCom+=
-    // }
     return(
       <ScrollView contentContainerStyle={styles.container}>
         <View 
           style={{
-            // flex:1,
             width:'100%',
             paddingLeft:50,
             flexDirection:'row',
-            // backgroundColor:'#f00',
           }}
         >
           <Text style={{
@@ -103,11 +97,12 @@ export default class Register extends React.Component{
                       secureTextEntry={false}//设置是否加密
                       selectionColor={colors.blue}
                       maxLength={11}
+                      keyboardType='numeric'
                       multiline={false}
                       clearButtonMode='while-editing'
                       underlineColorAndroid='transparent'
                       returnKeyLabel='飞起来'
-                      onChangeText={(v)=>{this._upDateName(v)}}
+                      onChangeText={(v)=>{this._upDatePhone(v,index)}}
                       onSelectionChange={()=>{}}
                       style={styles.input}
                     />
@@ -148,7 +143,7 @@ export default class Register extends React.Component{
     )
   }
   _Login(){
-    this.props.navigation.replace('Login')
+    this.props.navigation.goBack()
   }
   _AddPhone(index){
     
@@ -166,6 +161,14 @@ export default class Register extends React.Component{
     }
     this.setState({
       phoneArr:newArr
+    })
+  }
+  _upDatePhone(v,i){
+    // console.log(v,i)
+    let phoneArr=this.state.phoneArr;
+    phoneArr.splice(i,1,v)
+    this.setState({
+      phoneArr
     })
   }
   _upDateName=(name)=>{
@@ -197,22 +200,25 @@ export default class Register extends React.Component{
       return ;
     }
     
-    new Promise(()=>{
+    new Promise((resolve,reject)=>{
 
       Array.from(this.state.phoneArr,(item,index)=>{
         if(String(item).length<11){
           ToastAndroid.show(`第${index}个手机号格式错误，请正确输入!`,ToastAndroid.SHORT)
           // this.$refs['phone_'+index].focus()
+          reject()
           return false;
         }
+
       })
 
-    }).then(()=>{
-      
-      this.props.navigation.navigate('Index')
+      resolve()
 
+    }).then(()=>{
+      this.props.navigation.navigate('Index')
+      // fetch()
     }).catch(()=>{
-      alert(123)
+      ToastAndroid.show('参数错误!')
     })
 
   }
