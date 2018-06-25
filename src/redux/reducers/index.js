@@ -1,7 +1,11 @@
 import {combineReducers} from 'redux';
 
-import edit from './edit';
+import investList from './investList';
+import investInfor from './investInfor';
+import personInfor from './personInfor';
 
 export default combineReducers({
-  edit
+  investList,
+  investInfor,
+  personInfor,
 })

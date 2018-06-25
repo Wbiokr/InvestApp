@@ -25,6 +25,7 @@ class Login extends React.Component{
       name:'',
       pass:'',
     }
+    console.log(this.props)
   }
   render(){
     return(

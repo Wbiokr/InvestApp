@@ -25,6 +25,7 @@ export default class AnimatedLabel extends React.Component{
                 ]
               }
             ]} 
+            
            >{this.props.children}</Animated.Text>
   }
   focus(){

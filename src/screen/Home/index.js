@@ -40,10 +40,11 @@ import Loading from '../../components/Loading';
 import Radios from '../../components/RadioBox';
 
 import { toDate } from '../../utils/date'
+import { connect } from 'react-redux';
 
 const investing = url.record
 
-export default class App extends React.Component {
+class App extends React.Component {
   constructor(props) {
     super(props);
     // this.showMenu=this.showMenu.bind(this);
@@ -70,6 +71,7 @@ export default class App extends React.Component {
     this.cbMenu = this.cbMenu.bind(this)
   }
   render() {
+    console.log(this.props)
     let content = <FlatList
       data={this.state.cash}
       renderItem={this.renderItem.bind(this)}
@@ -540,7 +542,12 @@ export default class App extends React.Component {
   }
 }
 
+const mapStateToProps=state=>({
+  data:state.investList,
+  infor:state.investInfor,
+})
 
+export default connect(mapStateToProps)(App)
 
 const styles = StyleSheet.create({
   HeaderBox: {

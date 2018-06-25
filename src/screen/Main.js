@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types'
 
 import {
   createStackNavigator
@@ -12,6 +13,7 @@ import {
 import Login from './Login'
 import Register from './Register'
 import Index from './Index'
+import { connect } from 'react-redux';
 
 
 const App = createStackNavigator(
@@ -39,20 +41,37 @@ const App = createStackNavigator(
     }
   },
   {
-    initialRouteName: 'Login',
+    initialRouteName: 'Main',
     mode: 'modal',
     headerMode: 'screen',
 
   }
 )
 
-
-const AppScreen = <App
-  screenProps={
-    {
-      a: 123
-    }
+class AppRedux extends React.Component{
+  static propTypes={
+    dispatch:PropTypes.func.isRequired,
+    state:PropTypes.object.isRequired,
   }
-/>
 
-export default App
+  render(){
+    const {dispatch}=this.props;
+
+    console.log(this.props.state)
+    return (
+      <App 
+        // navigation={{
+          // dispatch,
+          // state,
+          // addListener
+        // }}
+      /> 
+    )
+  }
+}
+
+const mapStateToProps=state=>({
+  state
+})
+
+export default connect(mapStateToProps)(AppRedux)

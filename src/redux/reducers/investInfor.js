@@ -1,12 +1,19 @@
 import {
-  CHANGE_ALL
+  CHANGE_LIST_ALL
 } from '../action'
 
-const initialState={};
+const initialState={
+  totalCash: '',
+  totalRate: '',
+  totalBag: '',
+  totalRateUnit: '',
+  totalCashUnit: '',
+  totalBagUnit: '',
+};
 
 export default function editInfor(state=initialState,action){
   switch (action.type){
-    case CHANGE_ALL:
+    case CHANGE_LIST_ALL:
       return action.payload;
     default:
       return state;

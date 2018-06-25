@@ -10,7 +10,6 @@ import {
 
 import colors from '../utils/color'
 
-console.log(Dimensions.get('window'))
 
 export default class Loading extends React.Component{
   render(){
