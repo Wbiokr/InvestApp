@@ -5,6 +5,7 @@ import store from './src/redux/index';
 
 import App from './src/screen/Main';
 
+
 class AppRedux extends React.Component{
   render(){
     return(
