@@ -11,6 +11,7 @@ class AppRedux extends React.Component{
     return(
       <Provider store={store}>
         <App />
+        
       </Provider>
     )
   }
